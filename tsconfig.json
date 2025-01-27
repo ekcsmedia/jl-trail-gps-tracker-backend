@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",                // Use a compatible target version
+    "module": "commonjs",              // For Node.js
+    "experimentalDecorators": true,    // Enable decorators
+    "emitDecoratorMetadata": true,     // Enable metadata for decorators
+    "strictPropertyInitialization": false, // Disable strict initialization for Sequelize models
+    "esModuleInterop": true,           // Enable ES module interop
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "outDir": "./dist"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
