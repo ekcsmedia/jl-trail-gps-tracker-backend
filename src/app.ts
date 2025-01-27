@@ -2,11 +2,14 @@ import fastify from 'fastify';
 import driverRoutes from "./infrastructure/routes/driver.routes";
 import {sequelize} from "./utils/database";
 import clientRoutes from "./infrastructure/routes/client.route";
+import shiftRoutes from "./infrastructure/routes/shift.route";
 
 const app = fastify();
 
 app.register(driverRoutes);
 app.register(clientRoutes);
+app.register(shiftRoutes);
+
 
 app.get('/', async () => {
     return { message: 'Welcome to Fastify Clean Architecture with MySQL!' };
