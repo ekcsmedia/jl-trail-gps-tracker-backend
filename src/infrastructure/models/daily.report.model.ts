@@ -94,7 +94,7 @@ ShiftLogModel.init(
             allowNull: false,
         },
         trailId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: false,
         },
     },
