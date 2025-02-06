@@ -67,7 +67,7 @@ ShiftLogModel.init(
         },
         inchargeSign: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         employeeName: {
             type: DataTypes.STRING,
