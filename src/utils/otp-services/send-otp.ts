@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const twilioClient = twilio("ACa20aecc9ee60cfdb734129badd508aa5", "35b30e3621df608f545010912e190142");
+const twilioClient = twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
 
 const otpStore: { [key: string]: string } = {};
 
@@ -29,7 +29,7 @@ export default async function otpServicesRoutes(fastify: FastifyInstance) {
         try {
             await twilioClient.messages.create({
                 body: `Your OTP is: ${otp}`,
-                from: '+18572565022',
+                from: process.env.TWILIO_PHONE_NUMBER ,
                 to: "+918925450309"
             });
 
