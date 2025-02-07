@@ -6,6 +6,7 @@ import dailyReportRoutes from "./infrastructure/routes/shift.route";
 import cors from '@fastify/cors';
 import {formSubmissionRoutes} from "./infrastructure/routes/form.submission.route";
 import driverLocationRoutes from "./infrastructure/routes/driver.location.routes";
+import otpServicesRoutes from "./utils/otp-services/send-otp";
 
 const app = fastify();
 
@@ -19,6 +20,8 @@ app.register(clientRoutes);
 app.register(dailyReportRoutes);
 app.register(formSubmissionRoutes);
 app.register(driverLocationRoutes);
+app.register(otpServicesRoutes);
+
 
 app.get('/', async () => {
     return { message: 'Welcome to Fastify Clean Architecture with MySQL!' };
