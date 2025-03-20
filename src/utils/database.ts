@@ -5,11 +5,11 @@ import {ClientModel} from "../infrastructure/models/client.model";
 // sequelize instance
 export const sequelize = new Sequelize({
     dialect: 'mysql', // Use MySQL as the dialect
-    host: process.env.DB_HOST || '127.0.0.1',
-    port: Number(process.env.DB_PORT) || 3308,
+    host: process.env.DB_HOST || 'mysql.railway.internal',
+    port: Number(process.env.DB_PORT) || 3306 || 3308,
     username: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_NAME || 'trial',
+    password: process.env.DB_PASSWORD || 'OvVDjoBHUSmwQbBaEUBqgCqcrwuyhest',
+    database: process.env.DB_NAME || 'railway',
     models: [DriverModel, ClientModel], // Add all your Sequelize models here
     logging: false, // Disable SQL query logging in the console
 });
