@@ -8,7 +8,7 @@ import {formSubmissionRoutes} from "./infrastructure/routes/form.submission.rout
 import driverLocationRoutes from "./infrastructure/routes/driver.location.routes";
 import otpServicesRoutes from "./utils/otp-services/send-otp";
 
-const app = fastify();
+const app = fastify(); // sever
 
 
 app.register(cors, {
