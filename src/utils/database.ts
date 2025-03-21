@@ -1,12 +1,23 @@
 import { Sequelize } from 'sequelize-typescript';
 import {DriverModel} from "../infrastructure/repositories/driver.repositories";
 import {ClientModel} from "../infrastructure/models/client.model";
+import dotenv from 'dotenv'
 
+dotenv.config();
 // sequelize instance
 export const sequelize = new Sequelize({
+    // dialect: 'mysql', // Use MySQL as the dialect
+    // host: process.env.DB_HOST || 'localhost',
+    // port: Number(process.env.DB_PORT) || 3308,
+    // username: process.env.DB_USER || 'root',
+    // password: process.env.DB_PASSWORD || '',
+    // database: process.env.DB_NAME || 'trail',
+    // models: [DriverModel, ClientModel], // Add all your Sequelize models here
+    // logging: false, // Disable SQL query logging in the console
+
     dialect: 'mysql', // Use MySQL as the dialect
     host: process.env.DB_HOST || 'mysql.railway.internal',
-    port: Number(process.env.DB_PORT) || 3306 || 3308,
+    port: Number(process.env.DB_PORT) || 3306,
     username: process.env.DB_USER || 'root',
     password: process.env.DB_PASSWORD || 'OvVDjoBHUSmwQbBaEUBqgCqcrwuyhest',
     database: process.env.DB_NAME || 'railway',
