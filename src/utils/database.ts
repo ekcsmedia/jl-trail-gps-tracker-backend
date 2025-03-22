@@ -2,6 +2,7 @@ import { Sequelize } from 'sequelize-typescript';
 import {DriverModel} from "../infrastructure/repositories/driver.repositories";
 import {ClientModel} from "../infrastructure/models/client.model";
 import dotenv from 'dotenv'
+import {LocationModel} from "../infrastructure/models/location.model";
 
 dotenv.config();
 // sequelize instance
@@ -12,7 +13,7 @@ export const sequelize = new Sequelize({
     // username: process.env.DB_USER || 'root',
     // password: process.env.DB_PASSWORD || '',
     // database: process.env.DB_NAME || 'trail',
-    // models: [DriverModel, ClientModel], // Add all your Sequelize models here
+    // models: [DriverModel, ClientModel,LocationModel], // Add all your Sequelize models here
     // logging: false, // Disable SQL query logging in the console
 
     dialect: 'mysql', // Use MySQL as the dialect
@@ -21,7 +22,7 @@ export const sequelize = new Sequelize({
     username: process.env.DB_USER || 'root',
     password: process.env.DB_PASSWORD || 'OvVDjoBHUSmwQbBaEUBqgCqcrwuyhest',
     database: process.env.DB_NAME || 'railway',
-    models: [DriverModel, ClientModel], // Add all your Sequelize models here
+    models: [DriverModel, ClientModel,LocationModel], // Add all your Sequelize models here
     logging: false, // Disable SQL query logging in the console
 });
 

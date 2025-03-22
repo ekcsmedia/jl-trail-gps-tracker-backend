@@ -1,5 +1,6 @@
-import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
+import {FastifyInstance, FastifyRequest, FastifyReply} from "fastify";
 import DriverLocation from "../models/driver.location.model";
+import {LocationController} from "../controllers/location.controller";
 
 export default async function driverLocationRoutes(fastify: FastifyInstance) {
     fastify.post("/location", async (request: FastifyRequest, reply: FastifyReply) => {
@@ -26,4 +27,6 @@ export default async function driverLocationRoutes(fastify: FastifyInstance) {
         await DriverLocation.update({ isIdle: true }, { where: { driverId } });
         reply.send({ success: true });
     });
+    fastify.post('/api/locations', LocationController.storeLocation);
+
 }
