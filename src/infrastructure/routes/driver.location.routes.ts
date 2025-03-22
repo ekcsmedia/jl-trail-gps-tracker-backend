@@ -27,6 +27,8 @@ export default async function driverLocationRoutes(fastify: FastifyInstance) {
         await DriverLocation.update({ isIdle: true }, { where: { driverId } });
         reply.send({ success: true });
     });
+
+    /// test api
     fastify.post('/api/locations', LocationController.storeLocation);
 
 }
