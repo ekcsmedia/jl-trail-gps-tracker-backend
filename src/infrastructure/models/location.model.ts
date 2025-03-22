@@ -5,7 +5,7 @@ export class LocationModel extends Model  {
     @Column({ primaryKey: true, type: DataType.UUID, defaultValue: DataType.UUIDV4 })
     declare id: string;
 
-    @Column({ type: DataType.STRING, allowNull: false })
+    @Column({ type: DataType.STRING, allowNull: false, unique: true})
     declare driverId: string;
 
     @Column({ type: DataType.FLOAT, allowNull: false })
