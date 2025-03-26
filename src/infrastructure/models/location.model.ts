@@ -8,7 +8,7 @@ export class LocationModel extends Model  {
     @Column({ type: DataType.STRING, allowNull: false, unique: true})
     declare driverId: string
 
-    @Column({ type: DataType.STRING, allowNull: false, unique: true})
+    @Column({ type: DataType.STRING, allowNull: true, unique: true})
     declare phone: string;
 
     @Column({ type: DataType.FLOAT, allowNull: false })
