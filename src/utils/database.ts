@@ -23,7 +23,7 @@ export const sequelize = new Sequelize({
     password: process.env.DB_PASSWORD || 'OvVDjoBHUSmwQbBaEUBqgCqcrwuyhest',
     database: process.env.DB_NAME || 'railway',
     models: [DriverModel, ClientModel,LocationModel], // Add all your Sequelize models here
-    logging: false, // Disable SQL query logging in the console
+    logging: console.log  // ✅ Log raw SQL queries
 });
 
 // Ensure database connection on app startup
