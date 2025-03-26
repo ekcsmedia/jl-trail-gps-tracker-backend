@@ -6,7 +6,10 @@ export class LocationModel extends Model  {
     declare id: string;
 
     @Column({ type: DataType.STRING, allowNull: false, unique: true})
-    declare driverId: string;
+    declare driverId: string
+
+    @Column({ type: DataType.STRING, allowNull: false, unique: true})
+    declare phone: string;
 
     @Column({ type: DataType.FLOAT, allowNull: false })
     declare latitude: number;
