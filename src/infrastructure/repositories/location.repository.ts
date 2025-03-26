@@ -6,15 +6,13 @@ export class LocationRepository {
     }
 
     static async getDriverLocations(phone: string) {
-        return LocationModel.findAll({
+        return LocationModel.findOne({
             where: { phone },
             order: [['timestamp', 'DESC']],
         });
     }
 
     static async getAllDriverLocations() {
-        return LocationModel.findAll({
-            order: [['timestamp', 'DESC']],
-        });
+        return LocationModel.findAll();
     }
 }
