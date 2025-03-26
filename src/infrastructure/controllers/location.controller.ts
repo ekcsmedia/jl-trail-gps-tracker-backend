@@ -15,4 +15,15 @@ export class LocationController {
 
         res.send({ success: true, data: location });
     }
+
+    static async getDriverLocation(req: FastifyRequest, res: FastifyReply) {
+        const { phone } = req.query as any;
+        const location = await LocationRepository.getDriverLocations(phone);
+        res.send({ success: true, data: location });
+    }
+
+    static async getAllDriverLocations(req: FastifyRequest, res: FastifyReply) {
+        const location = await LocationRepository.getAllDriverLocations();
+        res.send({ success: true, data: location });
+    }
 }

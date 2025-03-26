@@ -5,9 +5,15 @@ export class LocationRepository {
         return LocationModel.upsert(data);
     }
 
-    static async getDriverLocations(driverId: string) {
+    static async getDriverLocations(phone: string) {
         return LocationModel.findAll({
-            where: { driverId },
+            where: { phone },
+            order: [['timestamp', 'DESC']],
+        });
+    }
+
+    static async getAllDriverLocations() {
+        return LocationModel.findAll({
             order: [['timestamp', 'DESC']],
         });
     }
