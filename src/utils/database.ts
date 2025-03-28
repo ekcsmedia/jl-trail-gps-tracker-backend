@@ -22,7 +22,6 @@ sequelize.authenticate()
         const { DriverModel } = await import("../infrastructure/models/driver.model");
         const { ClientModel } = await import("../infrastructure/models/client.model");
         const { LocationModel } = await import("../infrastructure/models/location.model");
-
         // ✅ Add models dynamically after Sequelize instance is ready
         sequelize.addModels([DriverModel, ClientModel, LocationModel]);
         console.log('✅ Models added successfully');
