@@ -17,7 +17,7 @@ export class LocationController {
     // }
 
     static async getDriverLocation(req: FastifyRequest, res: FastifyReply) {
-        const { phone } = req.query as any;
+        const { phone } = req.params as any;
         const location = await LocationRepository.getDriverLocations(phone);
         res.send({ success: true, data: location });
     }
