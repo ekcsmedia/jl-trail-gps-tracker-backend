@@ -25,5 +25,7 @@ sequelize.authenticate()
         // ✅ Add models dynamically after Sequelize instance is ready
         sequelize.addModels([DriverModel, ClientModel, LocationModel]);
         console.log('✅ Models added successfully');
+        await sequelize.sync({ alter: true });  // 👈 This will recreate missing tables
+        console.log('✅ Database synchronized');
     })
     .catch((err) => console.error('❌ Unable to connect to the database:', err));
