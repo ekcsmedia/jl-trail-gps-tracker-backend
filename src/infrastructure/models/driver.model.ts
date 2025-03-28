@@ -1,9 +1,9 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../../utils/database";  // Your Sequelize instance
 
-export class ClientModel extends Model {}
+export class DriverModel extends Model {}
 
-ClientModel.init(
+DriverModel.init(
     {
         id: {
             type: DataTypes.UUID,
@@ -15,12 +15,12 @@ ClientModel.init(
             type: DataTypes.STRING,
             allowNull: false,
         },
-        clientDetails: {
-            type: DataTypes.STRING,
+        phone: {
+            type: DataTypes.BIGINT,   // Use BIGINT for large phone numbers
             allowNull: false,
         },
-        phone: {
-            type: DataTypes.BIGINT,
+        employeeId: {
+            type: DataTypes.STRING,
             allowNull: false,
         },
         address: {
@@ -29,8 +29,8 @@ ClientModel.init(
         }
     },
     {
-        sequelize,           // Your Sequelize instance
-        tableName: "clients",
-        timestamps: true,     // Automatically adds `createdAt` and `updatedAt`
+        sequelize,              // Your Sequelize instance
+        tableName: "drivers",   // Table name in the DB
+        timestamps: true,       // Automatically adds `createdAt` and `updatedAt`
     }
 );

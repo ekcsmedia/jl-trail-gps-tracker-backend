@@ -1,24 +1,6 @@
 import { DriverEntity } from '../../core/entities/driver.entity';
-import { Table, Column, Model, DataType } from 'sequelize-typescript';
 import {DriverRepository} from "../../core/interfaces/driver.interface";
-
-@Table({ tableName: 'drivers' })
-export class DriverModel extends Model<DriverEntity, Omit<DriverEntity, 'id'>> {
-    @Column({ primaryKey: true, type: DataType.UUID, defaultValue: DataType.UUIDV4 })
-    declare id: string; // Use declare to avoid the TS2612 error
-
-    @Column({ type: DataType.STRING, allowNull: false })
-    declare name: string;
-
-    @Column({ type: DataType.BIGINT, allowNull: false })
-    declare phone: number;
-
-    @Column({ type: DataType.STRING, allowNull: false })
-    declare employeeId: string;
-
-    @Column({ type: DataType.STRING, allowNull: false })
-    declare address: string;
-}
+import {DriverModel} from "../models/driver.model";
 
 export class DriverRepositoryImpl implements DriverRepository {
     async create(driver: DriverEntity): Promise<DriverEntity> {

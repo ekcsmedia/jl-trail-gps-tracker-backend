@@ -26,4 +26,12 @@ export class LocationController {
         const location = await LocationRepository.getAllDriverLocations();
         res.send({ success: true, data: location });
     }
+
+    static async updateLocations(req: FastifyRequest, res: FastifyReply) {
+        const {phone, latitude,longitude,isIdle} = req.body as any;
+
+        const location = await LocationRepository.upsertLocation(phone, latitude,longitude,isIdle);
+        res.send({ success: true, data: location });
+    }
+
 }

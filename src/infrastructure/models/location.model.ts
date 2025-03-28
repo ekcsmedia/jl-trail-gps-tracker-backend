@@ -1,22 +1,48 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript';
+import {Model, DataTypes} from "sequelize";
+import {sequelize} from "../../utils/database";
+import {DriverModel} from "./driver.model";  // Your Sequelize instance
 
-@Table({ tableName: 'locations' })
-export class LocationModel extends Model  {
-    @Column({ primaryKey: true, type: DataType.UUID, defaultValue: DataType.UUIDV4 })
-    declare id: string;
-
-    @Column({ type: DataType.STRING, allowNull: false, unique: true})
-    declare driverId: string
-
-    @Column({ type: DataType.STRING, allowNull: true, unique: true})
-    declare phone: string;
-
-    @Column({ type: DataType.FLOAT, allowNull: false })
-    declare latitude: number;
-
-    @Column({ type: DataType.FLOAT, allowNull: false })
-    declare longitude: number;
-
-    @Column({ type: DataType.DATE, allowNull: false })
-    declare timestamp: number;
+export class LocationModel extends Model {
 }
+
+LocationModel.init(
+    {
+        id: {
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
+            primaryKey: true,
+            allowNull: false,
+        },
+        phone: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            unique: true,
+            references: {
+                model: DriverModel,
+                key: "phone"
+            }
+        },
+        latitude: {
+            type: DataTypes.FLOAT,
+            allowNull: false,
+        },
+        longitude: {
+            type: DataTypes.FLOAT,
+            allowNull: false,
+        },
+        timestamp: {
+            type: DataTypes.DATE,
+            allowNull: false,
+            defaultValue: DataTypes.NOW,  // ✅ Sets default to current timestamp
+        },
+        isIdle: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        }
+    },
+    {
+        sequelize,              // Your Sequelize instance
+        tableName: "locations",
+        timestamps: true,       // Automatically adds `createdAt` and `updatedAt`
+    }
+);
