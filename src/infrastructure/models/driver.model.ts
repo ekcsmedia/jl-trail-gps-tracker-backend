@@ -8,7 +8,7 @@ export class DriverModel extends Model {
     @Column({ type: DataType.STRING, allowNull: false })
     name!: string;
 
-    @Column({ type: DataType.BIGINT, allowNull: false })
+    @Column({ type: DataType.STRING, allowNull: false })
     phone!: number;
 
     @Column({ type: DataType.STRING, allowNull: false })

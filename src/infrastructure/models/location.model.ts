@@ -1,11 +1,13 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript';
+import {Table, Column, Model, DataType, ForeignKey} from 'sequelize-typescript';
+import {DriverModel} from "./driver.model";
 
 @Table({ tableName: 'locations', timestamps: true })
 export class LocationModel extends Model {
     @Column({ primaryKey: true, type: DataType.UUID, defaultValue: DataType.UUIDV4 })
     id!: string;
 
-    @Column({ type: DataType.STRING, allowNull: true })
+    @ForeignKey(() => DriverModel)
+    @Column({ type: DataType.STRING, allowNull: false })
     phone!: string;
 
     @Column({ type: DataType.FLOAT, allowNull: false })
