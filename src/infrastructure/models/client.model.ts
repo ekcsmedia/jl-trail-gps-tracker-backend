@@ -1,36 +1,19 @@
-import { Model, DataTypes } from "sequelize";
-import { sequelize } from "../../utils/database";  // Your Sequelize instance
+import { Table, Column, Model, DataType } from 'sequelize-typescript';
 
-export class ClientModel extends Model {}
+@Table({ tableName: 'clients', timestamps: true })
+export class ClientModel extends Model {
+    @Column({ primaryKey: true, type: DataType.UUID, defaultValue: DataType.UUIDV4 })
+    id!: string;
 
-ClientModel.init(
-    {
-        id: {
-            type: DataTypes.UUID,
-            defaultValue: DataTypes.UUIDV4,
-            primaryKey: true,
-            allowNull: false,
-        },
-        name: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        clientDetails: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        phone: {
-            type: DataTypes.BIGINT,
-            allowNull: false,
-        },
-        address: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        }
-    },
-    {
-        sequelize,           // Your Sequelize instance
-        tableName: "clients",
-        timestamps: true,     // Automatically adds `createdAt` and `updatedAt`
-    }
-);
+    @Column({ type: DataType.STRING, allowNull: false })
+    name!: string;
+
+    @Column({ type: DataType.STRING, allowNull: false })
+    clientDetails!: string;
+
+    @Column({ type: DataType.BIGINT, allowNull: false })
+    phone!: number;
+
+    @Column({ type: DataType.STRING, allowNull: false })
+    address!: string;
+}

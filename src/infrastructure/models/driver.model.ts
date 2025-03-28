@@ -1,36 +1,19 @@
-import { Model, DataTypes } from "sequelize";
-import { sequelize } from "../../utils/database";  // Your Sequelize instance
+import { Table, Column, Model, DataType } from 'sequelize-typescript';
 
-export class DriverModel extends Model {}
+@Table({ tableName: 'drivers', timestamps: true })
+export class DriverModel extends Model {
+    @Column({ primaryKey: true, type: DataType.UUID, defaultValue: DataType.UUIDV4 })
+    id!: string;
 
-DriverModel.init(
-    {
-        id: {
-            type: DataTypes.UUID,
-            defaultValue: DataTypes.UUIDV4,
-            primaryKey: true,
-            allowNull: false,
-        },
-        name: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        phone: {
-            type: DataTypes.BIGINT,   // Use BIGINT for large phone numbers
-            allowNull: false,
-        },
-        employeeId: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        address: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        }
-    },
-    {
-        sequelize,              // Your Sequelize instance
-        tableName: "drivers",   // Table name in the DB
-        timestamps: true,       // Automatically adds `createdAt` and `updatedAt`
-    }
-);
+    @Column({ type: DataType.STRING, allowNull: false })
+    name!: string;
+
+    @Column({ type: DataType.BIGINT, allowNull: false })
+    phone!: number;
+
+    @Column({ type: DataType.STRING, allowNull: false })
+    employeeId!: string;
+
+    @Column({ type: DataType.STRING, allowNull: false })
+    address!: string;
+}
