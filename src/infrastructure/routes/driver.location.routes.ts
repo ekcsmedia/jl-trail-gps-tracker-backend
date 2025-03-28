@@ -28,8 +28,6 @@ export default async function driverLocationRoutes(fastify: FastifyInstance) {
         reply.send({ success: true });
     });
 
-    fastify.post('/api/locations', LocationController.storeLocation);
-
     fastify.get('/api/locations', LocationController.getAllDriverLocations);
 
     fastify.get('/api/driverLocation/:phone', LocationController.getDriverLocation);

@@ -23,7 +23,7 @@ export class LocationRepository {
 
             if (existingLocation) {
                 // If driver is idle, do not update latitude and longitude
-                if (existingLocation.isIdle) {
+                if (isIdle) {
                     return {
                         message: "Driver is idle. Latitude and longitude not updated.",
                         location: existingLocation
