@@ -35,3 +35,5 @@ export class DriverRepositoryImpl implements DriverRepository {
         return deleted > 0;
     }
 }
+export { DriverModel };
+
