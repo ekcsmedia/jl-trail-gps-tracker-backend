@@ -6,4 +6,5 @@ export interface DriverRepository {
     findAll(): Promise<DriverEntity[]>;
     update(id: string, driver: Partial<DriverEntity>): Promise<DriverEntity | null>;
     delete(id: string): Promise<boolean>;
+
 }

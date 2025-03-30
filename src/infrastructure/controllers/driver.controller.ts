@@ -72,3 +72,24 @@ export async function  deleteDriver(req: FastifyRequest, reply: FastifyReply) {
         return reply.status(500).send({ message: 'Internal server error' });
     }
 }
+
+export async function verifyDriverPhoneHandler(req: FastifyRequest, reply: FastifyReply) {
+    try {   
+        const { phone } = req.query as { phone: string };
+
+        if (!phone) {
+            return reply.status(400).send({ message: 'Phone number is required' });
+        }
+
+        const driver = await driverUseCase.getDriverByPhone(phone);
+
+        if (driver) {
+            return reply.status(200).send({ message: 'Phone number exists', exists: true });
+        } else {
+            return reply.status(404).send({ message: 'Phone number not found', exists: false });
+        }
+    } catch (err) {
+        console.error(err);
+        return reply.status(500).send({ message: 'Internal server error' });
+    }
+}

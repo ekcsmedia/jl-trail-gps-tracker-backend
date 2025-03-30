@@ -4,7 +4,7 @@ import {
     deleteDriver,
     getAllDriversHandler,
     getDriver,
-    updateDriver
+    updateDriver, verifyDriverPhoneHandler
 } from '../controllers/driver.controller';
 
 export default async function driverRoutes(app: FastifyInstance) {
@@ -13,4 +13,6 @@ export default async function driverRoutes(app: FastifyInstance) {
     app.get('/drivers/:id', getDriver);
     app.put('/drivers/:id', updateDriver);
     app.delete('/drivers/:id', deleteDriver);
+    app.get('/drivers/verify-phone', verifyDriverPhoneHandler);
+
 }

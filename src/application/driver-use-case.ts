@@ -1,5 +1,6 @@
 import { DriverEntity } from '../core/entities/driver.entity';
 import {DriverRepository} from "../core/interfaces/driver.interface";
+import {DriverModel} from "../infrastructure/models/driver.model";
 
 export class DriverUseCase {
     constructor(private driverRepository: DriverRepository) {}
@@ -22,5 +23,17 @@ export class DriverUseCase {
 
     async deleteDriver(id: string): Promise<boolean> {
         return this.driverRepository.delete(id);
+    }
+
+    async getDriverByPhone(phone: string): Promise<DriverEntity | null> {
+        const driver = await DriverModel.findOne({
+            where: { phone }
+        });
+
+        if (driver) {
+            return driver.toJSON() as DriverEntity;
+        }
+
+        return null;
     }
 }
