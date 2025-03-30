@@ -74,7 +74,7 @@ export async function  deleteDriver(req: FastifyRequest, reply: FastifyReply) {
 }
 
 export async function verifyDriverPhoneHandler(req: FastifyRequest, reply: FastifyReply) {
-    try {   
+    try {
         const { phone } = req.query as { phone: string };
 
         if (!phone) {
