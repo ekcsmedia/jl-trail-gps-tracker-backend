@@ -60,7 +60,7 @@ export async function getDriver(req: FastifyRequest, reply: FastifyReply) {
         const { id } = req.params as { id: string };
         const driver = await driverUseCase.getDriver(id);
         if (!driver) {
-            return reply.status(404).send({ message: 'Driver not found' });
+            return reply.status(404).send({ message: 'Driver not found by id' });
         }
         return reply.status(200).send(driver);
     } catch (err) {
