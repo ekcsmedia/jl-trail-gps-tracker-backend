@@ -1,5 +1,5 @@
-import {Table, Column, Model, DataType, ForeignKey} from 'sequelize-typescript';
-import {DriverModel} from "./driver.model";
+import { Table, Column, Model, DataType, ForeignKey, BelongsTo } from 'sequelize-typescript';
+import { DriverModel } from './driver.model';
 
 @Table({ tableName: 'locations', timestamps: true })
 export class LocationModel extends Model {
@@ -7,8 +7,8 @@ export class LocationModel extends Model {
     id!: string;
 
     @ForeignKey(() => DriverModel)
-    @Column({ type: DataType.STRING, allowNull: false, unique: true })
-    phone!: string;
+    @Column({ type: DataType.STRING, allowNull: false })
+    phone!: string;  // Make sure this matches the type in DriverModel
 
     @Column({ type: DataType.FLOAT, allowNull: false })
     latitude!: number;
@@ -23,5 +23,9 @@ export class LocationModel extends Model {
     isIdle!: boolean;
 
     @Column({ type: DataType.BOOLEAN, defaultValue: true })
-    declare locationEnabled: boolean;
+    locationEnabled!: boolean;
+
+    // ✅ Use the @BelongsTo decorator directly here to set up the inverse relationship.
+    @BelongsTo(() => DriverModel, { foreignKey: 'phone', targetKey: 'phone', as: 'driver' })
+    driver!: DriverModel;
 }

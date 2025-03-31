@@ -1,7 +1,8 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { DriverUseCase } from '../../application/driver-use-case';
-import {DriverRepositoryImpl} from "../repositories/driver.repositories";
+import {DriverModel, DriverRepositoryImpl} from "../repositories/driver.repositories";
 import {DriverEntity} from "../../core/entities/driver.entity";
+import {LocationModel} from "../models/location.model";
 
 const repository = new DriverRepositoryImpl();
 const driverUseCase = new DriverUseCase(repository);
@@ -26,8 +27,32 @@ export async function createDriverHandler(req: FastifyRequest, reply: FastifyRep
 }
 
 export async function getAllDriversHandler(req: FastifyRequest, reply: FastifyReply) {
-    const drivers = await driverUseCase.getAllDrivers();
-    reply.send({message:"Fetched all driver data", payload: drivers});
+    try {
+        // ✅ Fetch drivers with location status
+        const drivers = await DriverModel.findAll({
+            include: [
+                {
+                    model: LocationModel,
+                    as: 'locationSettings',
+                    attributes: ['locationEnabled'],
+                }
+            ]
+        });
+
+        const result = drivers.map(driver => ({
+            id: driver.id,
+            name: driver.name,
+            phone: driver.phone,
+            employeeId: driver.employeeId,
+            address: driver.address,
+            locationEnabled: driver.locationSettings?.locationEnabled ?? false
+        }));
+
+        reply.send({ success: true, data: result });
+    } catch (error) {
+        console.error('Error fetching drivers:', error);
+        reply.status(500).send({ success: false, message: 'Failed to fetch drivers' });
+    }
 }
 
 export async function getDriver(req: FastifyRequest, reply: FastifyReply) {
