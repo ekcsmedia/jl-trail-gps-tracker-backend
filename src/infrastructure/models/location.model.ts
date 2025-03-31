@@ -7,7 +7,7 @@ export class LocationModel extends Model {
     id!: string;
 
     @ForeignKey(() => DriverModel)
-    @Column({ type: DataType.STRING, allowNull: false })
+    @Column({ type: DataType.STRING, allowNull: false, unique: true })
     phone!: string;
 
     @Column({ type: DataType.FLOAT, allowNull: false })
@@ -21,4 +21,7 @@ export class LocationModel extends Model {
 
     @Column({ type: DataType.BOOLEAN, defaultValue: false })
     isIdle!: boolean;
+
+    @Column({ type: DataType.BOOLEAN, defaultValue: true })
+    declare locationEnabled: boolean;
 }

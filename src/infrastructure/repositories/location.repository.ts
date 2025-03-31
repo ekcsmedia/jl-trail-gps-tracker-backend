@@ -1,4 +1,5 @@
 import {LocationModel} from "../models/location.model";
+import {DriverModel} from "./driver.repositories";
 
 export class LocationRepository {
     static async createLocation(data: any) {
@@ -58,5 +59,26 @@ export class LocationRepository {
             throw new Error("Failed to upsert location.");
         }
     }
+
+    // ✅ Find driver by phone
+    static async findByPhone(phone: string): Promise<LocationModel | null> {
+        const driver = await LocationModel.findOne({ where: { phone } });
+
+        if (!driver) return null;
+
+        return driver;
+    }
+
+    // ✅ Update locationEnabled status by phone
+    static async updateLocation(phone: string, locationEnabled: boolean): Promise<boolean> {
+        const driver = await LocationModel.findOne({ where: { phone } });
+
+        if (!driver) return false;
+
+        driver.locationEnabled = locationEnabled;
+        await driver.save();
+        return true;
+    }
+
 
 }

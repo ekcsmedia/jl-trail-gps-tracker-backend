@@ -27,4 +27,7 @@ export default async function driverLocationRoutes(fastify: FastifyInstance) {
 
     fastify.post('/api/driver-locations', LocationController.updateLocations);
 
+    // ✅ Route to toggle location sharing by phone
+    fastify.put("/drivers/phone/:phone/location", LocationController.toggleLocation);
+
 }
