@@ -5,11 +5,11 @@ dotenv.config();
 // ✅ Initialize Sequelize instance
 export const sequelize = new Sequelize({
     dialect: 'mysql',
-    host: process.env.DB_HOST || 'mysql.railway.internal',
-    port: Number(process.env.DB_PORT) || 3306,
-    username: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || 'OvVDjoBHUSmwQbBaEUBqgCqcrwuyhest',
-    database: process.env.DB_NAME || 'railway',
+    host: 'mysql.railway.internal',
+    port: 3306,
+    username: 'root',
+    password: 'OvVDjoBHUSmwQbBaEUBqgCqcrwuyhest',
+    database: 'railway',
     logging: console.log,
 });
 
@@ -22,8 +22,9 @@ sequelize.authenticate()
         const { DriverModel } = await import("../infrastructure/models/driver.model");
         const { ClientModel } = await import("../infrastructure/models/client.model");
         const { LocationModel } = await import("../infrastructure/models/location.model");
+        const {FormSubmissionModel} = await import("../infrastructure/models/form.submission.model")
         // ✅ Add models dynamically after Sequelize instance is ready
-        sequelize.addModels([DriverModel, ClientModel, LocationModel]);
+        sequelize.addModels([DriverModel, ClientModel, LocationModel, FormSubmissionModel]);
         console.log('✅ Models added successfully');
         await sequelize.sync({ alter: true });  // 👈 This will recreate missing tables
         console.log('✅ Database synchronized');

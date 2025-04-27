@@ -5,6 +5,11 @@ export class ShiftLogModel extends Model {}
 
 ShiftLogModel.init(
     {
+        id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
+        },
         shift: {
             type: DataTypes.STRING,
             allowNull: false,
