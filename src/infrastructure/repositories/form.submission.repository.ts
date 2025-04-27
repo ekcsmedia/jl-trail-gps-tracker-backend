@@ -1,6 +1,6 @@
 import {IFormSubmissionRepository} from "../../core/interfaces/form.submisson.interface";
-import FormSubmission from "../models/form.submission.model";
 import {FormSubmissionEntity} from "../../core/entities/form.submission";
+import {FormSubmission} from "../models/form.submission.model";
 
 class FormSubmissionRepository implements IFormSubmissionRepository {
     async create(form: FormSubmissionEntity): Promise<FormSubmissionEntity> {

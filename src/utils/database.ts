@@ -22,9 +22,9 @@ sequelize.authenticate()
         const { DriverModel } = await import("../infrastructure/models/driver.model");
         const { ClientModel } = await import("../infrastructure/models/client.model");
         const { LocationModel } = await import("../infrastructure/models/location.model");
-        // const {FormSubmissionModel} = await import("../infrastructure/models/form.submission.model")
+        const {FormSubmission} = await import("../infrastructure/models/form.submission.model")
         // ✅ Add models dynamically after Sequelize instance is ready
-        sequelize.addModels([DriverModel, ClientModel, LocationModel]);
+        sequelize.addModels([DriverModel, ClientModel, LocationModel, FormSubmission]);
         console.log('✅ Models added successfully');
         await sequelize.sync({ alter: true });  // 👈 This will recreate missing tables
         console.log('✅ Database synchronized');

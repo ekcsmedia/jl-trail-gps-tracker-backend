@@ -3,7 +3,7 @@
 import { Table, Column, Model, DataType } from 'sequelize-typescript';
 
 @Table({ tableName: 'form_submissions', timestamps: false })
-export class FormSubmissionModel extends Model {
+export class FormSubmission extends Model {
     @Column({ primaryKey: true, type: DataType.INTEGER, autoIncrement: true })
     id!: number;
 
