@@ -24,7 +24,7 @@ app.register(otpServicesRoutes);
 
 
 app.get('/', async () => {
-    return { message: 'Welcome to Fastify Clean Architecture with MySQL!' };
+    return { message: 'Welcome to Fastify Clean Architecture with MySQL!!!!' };
 });
 
 
