@@ -9,7 +9,7 @@ export class DriverModel extends Model {
     @Column({ type: DataType.STRING, allowNull: false })
     name!: string;
 
-    @Column({ type: DataType.STRING, allowNull: false })
+    @Column({ type: DataType.STRING, allowNull: false, unique: true })
     phone!: string;  // Make sure phone is a string to match with LocationModel
 
     @Column({ type: DataType.STRING, allowNull: false })
