@@ -8,7 +8,7 @@ export const sequelize = new Sequelize({
     host: 'mysql.railway.internal',
     port: 3306,
     username: 'root',
-    password: 'OvVDjoBHUSmwQbBaEUBqgCqcrwuyhest',
+    password: 'HxRuEXdTIOydZODucyZpptufpSwYNByd',
     database: 'railway',
     logging: console.log,
 });
