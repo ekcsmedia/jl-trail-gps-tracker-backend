@@ -13,6 +13,7 @@ class FormSubmissionRepository implements IFormSubmissionRepository {
             customerDriverName: form.customerDriverName,
             customerMobileNo: form.customerMobileNo,
             licenseNo: form.licenseNo,
+            imageVideoUrls :form.imageVideoUrls,
             vehicleDetails: form.vehicleDetails,
             competitorData: form.competitorData
         });
