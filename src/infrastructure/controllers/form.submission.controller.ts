@@ -7,7 +7,7 @@ const repository = new FormSubmissionRepository();
 const formSubmissionUseCase = new FormSubmissionUseCase(repository);
 
 export async function createFormSubmissionHandler(req: FastifyRequest, reply: FastifyReply) {
-    const { location, date, masterDriverName, empCode, mobileNo, customerDriverName, customerMobileNo, licenseNo, vehicleDetails, competitorData } = req.body as {
+    const { location, date, masterDriverName, empCode, mobileNo, customerDriverName, customerMobileNo, licenseNo, imageVideoUrls, vehicleDetails, competitorData } = req.body as {
         location: string;
         date: string;
         masterDriverName: string;
@@ -16,6 +16,7 @@ export async function createFormSubmissionHandler(req: FastifyRequest, reply: Fa
         customerDriverName: string;
         customerMobileNo: string;
         licenseNo: string;
+        imageVideoUrls: any;
         vehicleDetails: any;
         competitorData: any;
     };
@@ -30,6 +31,7 @@ export async function createFormSubmissionHandler(req: FastifyRequest, reply: Fa
         customerDriverName,
         customerMobileNo,
         licenseNo,
+        imageVideoUrls,
         vehicleDetails,
         competitorData
     });

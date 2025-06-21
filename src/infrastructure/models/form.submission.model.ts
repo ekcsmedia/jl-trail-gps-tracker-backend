@@ -1,6 +1,7 @@
 // infrastructure/models/FormSubmissionModel.ts
 
 import { Table, Column, Model, DataType } from 'sequelize-typescript';
+import {DataTypes} from "sequelize";
 
 @Table({ tableName: 'form_submissions', timestamps: true })
 export class FormSubmission extends Model {
@@ -36,4 +37,7 @@ export class FormSubmission extends Model {
 
     @Column({ type: DataType.JSON, allowNull: true })
     competitorData!: any[];
+
+    @Column({ type: DataType.JSON, allowNull: true })
+    imageVideoUrls!: any[];
 }

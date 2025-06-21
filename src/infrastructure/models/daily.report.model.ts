@@ -102,6 +102,10 @@ ShiftLogModel.init(
             type: DataTypes.STRING,
             allowNull: false,
         },
+        imageVideoUrls: {
+            type: DataTypes.JSON,
+            allowNull: true,
+        }
     },
     {
         sequelize, // Your Sequelize instance

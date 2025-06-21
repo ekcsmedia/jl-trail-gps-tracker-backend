@@ -23,6 +23,7 @@ export class ShiftLog {
     dicvInchargeName!: string;
     dicvInchargePhoneNo!: string;
     trailId!: string;
+    imageVideoUrls! : any;
 
     constructor(partial: Partial<ShiftLog>) {
         Object.assign(this, partial);
