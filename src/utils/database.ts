@@ -1,5 +1,6 @@
 import { Sequelize } from 'sequelize-typescript';
 import dotenv from 'dotenv';
+import {Admin} from "../infrastructure/models/auth.model";
 dotenv.config();
 
 // ✅ Initialize Sequelize instance
@@ -23,8 +24,9 @@ sequelize.authenticate()
         const { ClientModel } = await import("../infrastructure/models/client.model");
         const { LocationModel } = await import("../infrastructure/models/location.model");
         const {FormSubmission} = await import("../infrastructure/models/form.submission.model")
+        const {Admin} = await  import("../infrastructure/models/auth.model")
         // ✅ Add models dynamically after Sequelize instance is ready
-        sequelize.addModels([DriverModel, ClientModel, LocationModel, FormSubmission]);
+        sequelize.addModels([DriverModel, ClientModel, LocationModel, FormSubmission,Admin]);
         console.log('✅ Models added successfully');
         await sequelize.sync({ alter: true });  // 👈 This will recreate missing tables
         console.log('✅ Database synchronized');

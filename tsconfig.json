@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "typeRoots": ["./types", "./node_modules/@types"],
     "target": "ES2020",                // Use a compatible target version
     "module": "commonjs",              // For Node.js
     "experimentalDecorators": true,    // Enable decorators
@@ -10,6 +11,6 @@
     "skipLibCheck": true,
     "outDir": "./dist"
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "types"],
   "exclude": ["node_modules", "dist"]
 }
