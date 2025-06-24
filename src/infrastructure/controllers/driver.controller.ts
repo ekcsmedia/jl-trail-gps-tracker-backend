@@ -47,7 +47,8 @@ export async function getAllDriversHandler(req: FastifyRequest, reply: FastifyRe
             phone: driver.phone,
             employeeId: driver.employeeId,
             address: driver.address,
-            locationEnabled: driver.locationSettings?.locationEnabled ?? false
+            locationEnabled: driver.locationSettings?.locationEnabled ?? false,
+            proofDocs : driver.proofDocs,
         }));
 
         reply.send({ success: true, data: result });

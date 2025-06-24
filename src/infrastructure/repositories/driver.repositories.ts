@@ -9,6 +9,7 @@ export class DriverRepositoryImpl implements DriverRepository {
             phone: driver.phone,
             employeeId: driver.employeeId,
             address: driver.address,
+            proofDocs: driver.proofDocs
         });
         return created.toJSON() as DriverEntity;
     }
