@@ -4,6 +4,7 @@ export class DriverEntity {
         public name: string,
         public phone: number,
         public employeeId: string,
-        public address: string
+        public address: string,
+        public proofDocs: string[],
     ) {}
 }
