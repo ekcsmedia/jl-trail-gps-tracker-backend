@@ -19,7 +19,7 @@ export class DriverModel extends Model {
     address!: string;
 
     @Column({ type: DataType.JSON, allowNull: false })
-    proofDocs!: string;
+    proofDocs!: string[];
 
     // ✅ Use the @HasOne decorator directly here to set up the relationship.
     @HasOne(() => LocationModel, { foreignKey: 'phone', sourceKey: 'phone', as: 'locationSettings' })
