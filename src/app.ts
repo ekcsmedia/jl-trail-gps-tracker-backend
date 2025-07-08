@@ -10,6 +10,7 @@ import otpServicesRoutes from "./utils/otp-services/send-otp";
 import fastifyJwt from "@fastify/jwt";
 import dotenv from 'dotenv';
 import {authRoutes} from "./infrastructure/controllers/auth.controller";
+import dashboardRoutes from "./infrastructure/routes/dashboard.route";
 
 dotenv.config();
 
@@ -38,6 +39,7 @@ app.register(formSubmissionRoutes);
 app.register(driverLocationRoutes);
 app.register(otpServicesRoutes);
 app.register(authRoutes);
+app.register(dashboardRoutes);
 
 
 app.get('/', async () => {
