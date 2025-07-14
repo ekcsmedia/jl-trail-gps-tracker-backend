@@ -1,5 +1,8 @@
 // infrastructure/models/trial_form/trial.form.model.ts
-import { Table, Column, Model, DataType } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, HasMany } from 'sequelize-typescript';
+import {TrialParticipant} from "./trail.participants.model";
+import {TrialTrip} from "./trail.trip.details.model";
+import {TrialVehiclePhoto} from "./trial.vehicle.photo.model";
 
 @Table({ tableName: 'trial_forms', timestamps: true })
 export class TrialForm extends Model {
@@ -50,4 +53,13 @@ export class TrialForm extends Model {
 
     @Column(DataType.TEXT)
     customer_remarks!: string;
+
+    @HasMany(() => TrialParticipant, { foreignKey: 'trial_form_id', as: 'participants' })
+    participants!: TrialParticipant[];
+
+    @HasMany(() => TrialTrip, { foreignKey: 'trial_form_id', as: 'trips' })
+    trips!: TrialTrip[];
+
+    @HasMany(() => TrialVehiclePhoto, { foreignKey: 'trial_form_id', as: 'photos' })
+    photos!: TrialVehiclePhoto[];
 }
