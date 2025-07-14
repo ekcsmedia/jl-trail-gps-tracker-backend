@@ -15,6 +15,4 @@ export function setupTrialFormAssociations() {
     // One TrialForm → many TrialVehiclePhotos
     TrialForm.hasMany(TrialVehiclePhoto, { foreignKey: 'trial_form_id', as: 'photos' });
     TrialVehiclePhoto.belongsTo(TrialForm, { foreignKey: 'trial_form_id', as: 'trialForm' });
-
-    console.log('✅ TrialForm associations set up');
 }
