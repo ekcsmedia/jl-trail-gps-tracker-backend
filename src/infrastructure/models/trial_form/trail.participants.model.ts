@@ -1,12 +1,24 @@
-import { Model, DataTypes } from 'sequelize';
-import {sequelize} from "../../../utils/database";
+import { Table, Column, Model, DataType, ForeignKey, BelongsTo } from 'sequelize-typescript';
+import { TrialForm } from './trail.form.model';
 
-export default class TrialParticipant extends Model {}
+@Table({ tableName: 'trial_participants', timestamps: true })
+export class TrialParticipant extends Model {
+    @Column({ type: DataType.BIGINT, autoIncrement: true, primaryKey: true })
+    id!: number;
 
-TrialParticipant.init({
-    id: { type: DataTypes.BIGINT, autoIncrement: true, primaryKey: true },
-    trial_form_id: { type: DataTypes.BIGINT, allowNull: false },
-    role: DataTypes.ENUM('CSM','PC','Driver','Customer'),
-    name: DataTypes.STRING,
-    sign: DataTypes.TEXT
-}, { sequelize, tableName: 'trial_participants' });
+    @ForeignKey(() => TrialForm)
+    @Column({ type: DataType.BIGINT, allowNull: false })
+    trial_form_id!: number;
+
+    @Column(DataType.ENUM('CSM', 'PC', 'Driver', 'Customer'))
+    role!: 'CSM' | 'PC' | 'Driver' | 'Customer';
+
+    @Column(DataType.STRING)
+    name!: string;
+
+    @Column(DataType.TEXT)
+    sign!: string;
+
+    @BelongsTo(() => TrialForm)
+    trialForm!: TrialForm;
+}

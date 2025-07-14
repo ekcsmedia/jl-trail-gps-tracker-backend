@@ -1,23 +1,57 @@
-import { Model, DataTypes } from 'sequelize';
-import {sequelize} from "../../../utils/database";
+import { Table, Column, Model, DataType, ForeignKey, BelongsTo } from 'sequelize-typescript';
+import { TrialForm } from './trail.form.model';
 
-export default class TrialTrip extends Model {}
+@Table({ tableName: 'trial_trips', timestamps: true })
+export class TrialTrip extends Model {
+    @Column({ type: DataType.BIGINT, autoIncrement: true, primaryKey: true })
+    id!: number;
 
-TrialTrip.init({
-    id: { type: DataTypes.BIGINT, autoIncrement: true, primaryKey: true },
-    trial_form_id: { type: DataTypes.BIGINT, allowNull: false },
-    trip_no: DataTypes.STRING,
-    trip_route: DataTypes.TEXT,
-    trip_start_date: DataTypes.DATE,
-    trip_end_date: DataTypes.DATE,
-    start_km: DataTypes.FLOAT,
-    end_km: DataTypes.FLOAT,
-    trip_km: DataTypes.FLOAT,
-    max_speed: DataTypes.FLOAT,
-    weight_gvw: DataTypes.FLOAT,
-    actual_diesel_ltrs: DataTypes.FLOAT,
-    total_trip_km: DataTypes.FLOAT,
-    actual_fe_kmpl: DataTypes.FLOAT,
-    issues_found: DataTypes.TEXT,
-    trial_remarks: DataTypes.TEXT
-}, { sequelize, tableName: 'trial_trips' });
+    @ForeignKey(() => TrialForm)
+    @Column({ type: DataType.BIGINT, allowNull: false })
+    trial_form_id!: number;
+
+    @Column(DataType.STRING)
+    trip_no!: string;
+
+    @Column(DataType.TEXT)
+    trip_route!: string;
+
+    @Column(DataType.DATE)
+    trip_start_date!: Date;
+
+    @Column(DataType.DATE)
+    trip_end_date!: Date;
+
+    @Column(DataType.FLOAT)
+    start_km!: number;
+
+    @Column(DataType.FLOAT)
+    end_km!: number;
+
+    @Column(DataType.FLOAT)
+    trip_km!: number;
+
+    @Column(DataType.FLOAT)
+    max_speed!: number;
+
+    @Column(DataType.FLOAT)
+    weight_gvw!: number;
+
+    @Column(DataType.FLOAT)
+    actual_diesel_ltrs!: number;
+
+    @Column(DataType.FLOAT)
+    total_trip_km!: number;
+
+    @Column(DataType.FLOAT)
+    actual_fe_kmpl!: number;
+
+    @Column(DataType.TEXT)
+    issues_found!: string;
+
+    @Column(DataType.TEXT)
+    trial_remarks!: string;
+
+    @BelongsTo(() => TrialForm)
+    trialForm!: TrialForm;
+}

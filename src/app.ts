@@ -11,7 +11,7 @@ import fastifyJwt from "@fastify/jwt";
 import dotenv from 'dotenv';
 import {authRoutes} from "./infrastructure/controllers/auth.controller";
 import dashboardRoutes from "./infrastructure/routes/dashboard.route";
-import setupAssociations from "./utils/associations";
+import {setupTrialFormAssociations} from "./utils/associations";
 
 dotenv.config();
 
@@ -42,7 +42,7 @@ app.register(otpServicesRoutes);
 app.register(authRoutes);
 app.register(dashboardRoutes);
 
-setupAssociations();
+setupTrialFormAssociations();
 
 app.get('/', async () => {
     return { message: 'Welcome to Fastify Clean Architecture with MySQL!!!!' };

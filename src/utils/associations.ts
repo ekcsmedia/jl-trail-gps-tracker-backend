@@ -1,17 +1,20 @@
-// associations/index.ts
+import {TrialForm} from "../infrastructure/models/trial_form/trail.form.model";
+import {TrialParticipant} from "../infrastructure/models/trial_form/trail.participants.model";
+import {TrialTrip} from "../infrastructure/models/trial_form/trail.trip.details.model";
+import {TrialVehiclePhoto} from "../infrastructure/models/trial_form/trial.vehicle.photo.model";
 
-import TrialForm from "../infrastructure/models/trial_form/trail.form.model";
-import TrialTrip from "../infrastructure/models/trial_form/trail.trip.details.model";
-import TrialParticipant from "../infrastructure/models/trial_form/trail.participants.model";
-import TrialVehiclePhoto from "../infrastructure/models/trial_form/trial.vehicle.photo.model";
+export function setupTrialFormAssociations() {
+    // One TrialForm → many TrialParticipants
+    TrialForm.hasMany(TrialParticipant, { foreignKey: 'trial_form_id', as: 'participants' });
+    TrialParticipant.belongsTo(TrialForm, { foreignKey: 'trial_form_id', as: 'trialForm' });
 
-export default function setupAssociations() {
-    TrialForm.hasMany(TrialTrip, { foreignKey: 'trial_form_id' });
-    TrialTrip.belongsTo(TrialForm, { foreignKey: 'trial_form_id' });
+    // One TrialForm → many TrialTrips
+    TrialForm.hasMany(TrialTrip, { foreignKey: 'trial_form_id', as: 'trips' });
+    TrialTrip.belongsTo(TrialForm, { foreignKey: 'trial_form_id', as: 'trialForm' });
 
-    TrialForm.hasMany(TrialParticipant, { foreignKey: 'trial_form_id' });
-    TrialParticipant.belongsTo(TrialForm, { foreignKey: 'trial_form_id' });
+    // One TrialForm → many TrialVehiclePhotos
+    TrialForm.hasMany(TrialVehiclePhoto, { foreignKey: 'trial_form_id', as: 'photos' });
+    TrialVehiclePhoto.belongsTo(TrialForm, { foreignKey: 'trial_form_id', as: 'trialForm' });
 
-    TrialForm.hasMany(TrialVehiclePhoto, { foreignKey: 'trial_form_id' });
-    TrialVehiclePhoto.belongsTo(TrialForm, { foreignKey: 'trial_form_id' });
+    console.log('✅ TrialForm associations set up');
 }

@@ -1,10 +1,18 @@
-import { Model, DataTypes } from 'sequelize';
-import {sequelize} from "../../../utils/database";
+import { Table, Column, Model, DataType, ForeignKey, BelongsTo } from 'sequelize-typescript';
+import { TrialForm } from './trail.form.model';
 
-export default class TrialVehiclePhoto extends Model {}
+@Table({ tableName: 'trial_vehicle_photos', timestamps: true })
+export class TrialVehiclePhoto extends Model {
+    @Column({ type: DataType.BIGINT, autoIncrement: true, primaryKey: true })
+    id!: number;
 
-TrialVehiclePhoto.init({
-    id: { type: DataTypes.BIGINT, autoIncrement: true, primaryKey: true },
-    trial_form_id: { type: DataTypes.BIGINT, allowNull: false },
-    url: DataTypes.TEXT
-}, { sequelize, tableName: 'trial_vehicle_photos' });
+    @ForeignKey(() => TrialForm)
+    @Column({ type: DataType.BIGINT, allowNull: false })
+    trial_form_id!: number;
+
+    @Column(DataType.TEXT)
+    url!: string;
+
+    @BelongsTo(() => TrialForm)
+    trialForm!: TrialForm;
+}
