@@ -1,14 +1,14 @@
 // src/controllers/dashboardController.ts
 import { FastifyReply, FastifyRequest } from 'fastify';
-import {FormSubmission} from "../models/form.submission.model";
 import {ShiftLogModel} from "../models/daily.report.model";
 import {DriverModel} from "../models/driver.model";
+import {TrialForm} from "../models/trial_form/trail.form.model";
 
 export const getCounts = async (request: FastifyRequest, reply: FastifyReply) => {
     try {
         const [driversCount, formSubmissionsCount, shiftLogsCount] = await Promise.all([
             DriverModel.count(),
-            FormSubmission.count(),
+            TrialForm.count(),
             ShiftLogModel.count(),
         ]);
 
