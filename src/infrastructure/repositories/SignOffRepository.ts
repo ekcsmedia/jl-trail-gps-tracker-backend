@@ -7,7 +7,7 @@ import {SignOffCreateDto} from "../../validations/signoffSchemas";
 import {TripDetailModel} from "../models/TripDetailModel";
 import {SignOff} from "../../core/entities/SignOff";
 import {Op} from "sequelize";
-;
+
 
 export class SignOffRepository implements ISignOffRepository {
     async create(payload: SignOffCreateDto) {
