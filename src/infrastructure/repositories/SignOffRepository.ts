@@ -108,9 +108,17 @@ export class SignOffRepository implements ISignOffRepository {
         });
     }
 
-    async createDraftForDriver(driverId: string): Promise<SignOff> {
-        return await SignOffModel.create({ createdBy: driverId, createdByRole: "DRIVER", status: "DRAFT" });
+// repository
+    async createDraftForDriver(data: any) {
+        let draft: SignOffModel;
+        draft = await SignOffModel.create({
+            ...data,
+            isSubmitted: false,
+        });
+
+        return draft; // Sequelize instance (with ID)
     }
+
 
     async submit(id: number, role: 'DRIVER' | 'ADMIN'): Promise<SignOffModel> {
         // update only status + submittedAt (and optionally role)

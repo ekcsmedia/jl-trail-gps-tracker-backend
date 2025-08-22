@@ -44,10 +44,19 @@ export class SignOffController {
     }
 
     static async createDraftForDriver(req: FastifyRequest, reply: FastifyReply) {
-        const driverId = (req.body as any).driverId; // or from auth
-        const result = await repo.createDraftForDriver(driverId);
-        reply.send(result);
+        try {
+            const data = req.body as any;
+
+            // repo should handle saving partial data + driverId
+            const draft = await repo.createDraftForDriver(data);
+
+            return reply.code(201).send(draft); // return full draft with ID
+        } catch (err) {
+            req.log.error(err);
+            return reply.code(500).send({ error: "Failed to create draft" });
+        }
     }
+
 
     static async submit(req: FastifyRequest, reply: FastifyReply) {
         const { id } = req.params as any;
