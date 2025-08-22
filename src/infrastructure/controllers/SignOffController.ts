@@ -35,4 +35,24 @@ export class SignOffController {
         await repo.remove(Number(req.params.id));
         reply.code(204).send();
     }
+
+    static async getDraftForDriver(req: FastifyRequest, reply: FastifyReply) {
+        const driverId = (req.query as any).driverId; // or from auth
+        const result = await repo.getDraftForDriver(driverId);
+        if (!result) return reply.status(404).send({ error: "No draft" });
+        reply.send(result);
+    }
+
+    static async createDraftForDriver(req: FastifyRequest, reply: FastifyReply) {
+        const driverId = (req.body as any).driverId; // or from auth
+        const result = await repo.createDraftForDriver(driverId);
+        reply.send(result);
+    }
+
+    static async submit(req: FastifyRequest, reply: FastifyReply) {
+        const { id } = req.params as any;
+        const { role } = req.body as any;
+        const result = await repo.submit(+id, role);
+        reply.send(result);
+    }
 }

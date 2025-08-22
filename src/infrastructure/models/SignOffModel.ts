@@ -1,5 +1,10 @@
 import {
-    Table, Column, Model, DataType, HasMany
+    Table,
+    Column,
+    Model,
+    DataType,
+    HasMany,
+    Default,
 } from 'sequelize-typescript';
 import { TripDetailModel } from './TripDetailModel';
 import { ParticipantModel } from './ParticipantModel';
@@ -33,6 +38,17 @@ export class SignOffModel extends Model {
 
     @Column({ type: DataType.ENUM('DRIVER', 'ADMIN'), allowNull: false })
     declare createdByRole: 'DRIVER' | 'ADMIN';
+
+    // ✅ NEW FIELDS
+    @Column({ type: DataType.INTEGER, allowNull: true })
+    declare driverId: number | null; // link to driver (FK if you have Drivers table)
+
+    @Default('DRAFT')
+    @Column({ type: DataType.ENUM('DRAFT', 'SUBMITTED'), allowNull: false })
+    declare status: 'DRAFT' | 'SUBMITTED';
+
+    @Column({ type: DataType.DATE, allowNull: true })
+    declare submittedAt: Date | null;
 
     @HasMany(() => TripDetailModel)
     declare tripDetails?: TripDetailModel[];

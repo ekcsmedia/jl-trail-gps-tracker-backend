@@ -5,6 +5,7 @@ import {PhotoModel} from "../models/PhotoModel";
 import {SignOffModel} from "../models/SignOffModel";
 import {SignOffCreateDto} from "../../validations/signoffSchemas";
 import {TripDetailModel} from "../models/TripDetailModel";
+import {SignOff} from "../../core/entities/SignOff";
 ;
 
 export class SignOffRepository implements ISignOffRepository {
@@ -100,4 +101,37 @@ export class SignOffRepository implements ISignOffRepository {
     async remove(id: number) {
         return SignOffModel.destroy({ where: { id } });
     }
+
+    async getDraftForDriver(driverId: string): Promise<SignOff | null> {
+        return await SignOffModel.findOne({
+            where: { createdBy: driverId, status: "DRAFT" },
+        });
+    }
+
+    async createDraftForDriver(driverId: string): Promise<SignOff> {
+        return await SignOffModel.create({ createdBy: driverId, createdByRole: "DRIVER", status: "DRAFT" });
+    }
+
+    async submit(id: number, role: 'DRIVER' | 'ADMIN'): Promise<SignOffModel> {
+        // update only status + submittedAt (and optionally role)
+        await SignOffModel.update(
+            {
+                status: 'SUBMITTED',
+                createdByRole: role,
+                submittedAt: new Date(),
+            },
+            { where: { id } }
+        );
+
+        const updated = await SignOffModel.findByPk(id, {
+            include: ['tripDetails', 'participants', 'photos'],
+        });
+
+        if (!updated) {
+            throw new Error(`SignOff with id ${id} not found`);
+        }
+
+        return updated;
+    }
+
 }

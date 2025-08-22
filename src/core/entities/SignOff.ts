@@ -12,17 +12,28 @@ export interface CustomerVehicleDetails {
 }
 
 
+// export interface SignOff {
+//     id?: number;
+//     customerName: string;
+//     customerExpectedFE?: number | null;
+//     beforeTrialsFE?: number | null;
+//     afterTrialsFE?: number | null;
+//     customerVehicleDetails?: CustomerVehicleDetails;
+//     issuesFoundDuringTrial?: string | null;
+//     trialRemarks?: string | null;
+//     customerRemarks?: string | null;
+//     createdByRole: 'DRIVER' | 'ADMIN';
+//     createdAt?: string;
+//     updatedAt?: string;
+// }
+
+// src/core/entities/SignOff.ts
 export interface SignOff {
     id?: number;
-    customerName: string;
-    customerExpectedFE?: number | null;
-    beforeTrialsFE?: number | null;
-    afterTrialsFE?: number | null;
-    customerVehicleDetails?: CustomerVehicleDetails;
-    issuesFoundDuringTrial?: string | null;
-    trialRemarks?: string | null;
-    customerRemarks?: string | null;
-    createdByRole: 'DRIVER' | 'ADMIN';
-    createdAt?: string;
-    updatedAt?: string;
+    createdBy?: string;
+    createdByRole: string;
+    status: 'DRAFT' | 'SUBMITTED';
+    data?: any; // JSON form data
+    createdAt?: Date;
+    updatedAt?: Date;
 }
