@@ -40,10 +40,10 @@ export class SignOffModel extends Model {
     declare createdByRole: 'DRIVER' | 'ADMIN';
 
     // ✅ NEW FIELDS
-    @Column({ type: DataType.INTEGER, allowNull: true })
+    @Column({ type: DataType.TEXT, allowNull: true })
     declare driverId: string | null; // link to driver (FK if you have Drivers table)
 
-    @Column({ type: DataType.STRING, allowNull: true })
+    @Column({ type: DataType.TEXT, allowNull: true })
     declare createdBy: string | null; // nullable string
 
 

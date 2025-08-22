@@ -25,11 +25,20 @@ export class SignOffController {
         reply.send(item);
     }
 
-    static async update(req: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+    static async update(
+        req: FastifyRequest<{ Params: { id: string } }>,
+        reply: FastifyReply
+    ) {
         const parsed = signOffCreateSchema.partial().parse(req.body);
-        const item = await repo.update(Number(req.params.id), parsed);
-        reply.send(item);
+
+        await repo.update(Number(req.params.id), parsed);
+
+        // ✅ fetch full object with associations
+        const fullItem = await repo.getById(Number(req.params.id));
+
+        reply.send(fullItem);
     }
+
 
     static async remove(req: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
         await repo.remove(Number(req.params.id));
