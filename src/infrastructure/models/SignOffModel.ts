@@ -43,6 +43,10 @@ export class SignOffModel extends Model {
     @Column({ type: DataType.INTEGER, allowNull: true })
     declare driverId: string | null; // link to driver (FK if you have Drivers table)
 
+    @Column({ type: DataType.STRING, allowNull: true })
+    declare createdBy: string | null; // nullable string
+
+
     @Default('DRAFT')
     @Column({ type: DataType.ENUM('DRAFT', 'SUBMITTED'), allowNull: false })
     declare status: 'DRAFT' | 'SUBMITTED';
