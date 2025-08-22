@@ -5,8 +5,8 @@ dotenv.config();
 // ✅ Initialize Sequelize instance
 export const sequelize = new Sequelize({
     dialect: 'mysql',
-    host: 'mysql.railway.internal',
-    port: 3306,
+    host: 'caboose.proxy.rlwy.net',
+    port: 25861,
     username: 'root',
     password: 'HxRuEXdTIOydZODucyZpptufpSwYNByd',
     database: 'railway',
