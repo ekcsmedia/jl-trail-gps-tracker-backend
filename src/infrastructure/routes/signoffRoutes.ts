@@ -8,7 +8,7 @@ export async function signoffRoutes(app: FastifyInstance) {
     app.get('/signoffs/:id', SignOffController.getById);
     app.put('/signoffs/:id', SignOffController.update);
     app.delete('/signoffs/:id', SignOffController.remove);
-    app.get("/signOffs/draft/driver", SignOffController.getDraftForDriver);
-    app.post("/signOffs/draft/driver", SignOffController.createDraftForDriver);
-    app.post("/signOffs/:id/submit", SignOffController.submit);
+    app.get("/signoffs/draft/driver", SignOffController.getDraftForDriver);
+    app.post("/signoffs/draft/driver", SignOffController.createDraftForDriver);
+    app.post("/signoffs/:id/submit", SignOffController.submit);
 }
