@@ -1,39 +1,44 @@
 import { z } from 'zod';
 
 export const participantSchema = z.object({
-    role: z.enum(['CSM','PC','DRIVER','CUSTOMER']),
-    name: z.string().optional().default(''),
-    signatureUrl: z.string().url().optional(),
+    role: z.any().nullable().optional(),
+    name: z.any().nullable().optional(),
+    signatureUrl: z.any().nullable().optional(),
 });
 
 export const tripDetailSchema = z.object({
-    tripNo: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4), z.literal(5), z.literal(6)]),
-    tripRoute: z.string().optional().default(''),
-    tripStartDate: z.string().optional(),
-    tripEndDate: z.string().optional(),
-    startKm: z.number().nullable().optional(),
-    endKm: z.number().nullable().optional(),
-    tripKm: z.number().nullable().optional(),
-    maxSpeed: z.number().nullable().optional(),
-    weightGVW: z.number().nullable().optional(),
-    actualDieselLtrs: z.number().nullable().optional(),
-    totalTripKm: z.number().nullable().optional(),
-    actualFE: z.number().nullable().optional(),
+    tripNo: z.any().nullable().optional(),
+    tripRoute: z.any().nullable().optional(),
+    tripStartDate: z.any().nullable().optional(),
+    tripEndDate: z.any().nullable().optional(),
+    startKm: z.any().nullable().optional(),
+    endKm: z.any().nullable().optional(),
+    tripKm: z.any().nullable().optional(),
+    maxSpeed: z.any().nullable().optional(),
+    weightGVW: z.any().nullable().optional(),
+    actualDieselLtrs: z.any().nullable().optional(),
+    totalTripKm: z.any().nullable().optional(),
+    actualFE: z.any().nullable().optional(),
 });
 
 export const signOffCreateSchema = z.object({
-    customerName: z.string().min(1),
-    customerExpectedFE: z.number().nullable().optional(),
-    beforeTrialsFE: z.number().nullable().optional(),
-    afterTrialsFE: z.number().nullable().optional(),
-    customerVehicleDetails: z.any().optional(),
-    issuesFoundDuringTrial: z.string().optional(),
-    trialRemarks: z.string().optional(),
-    customerRemarks: z.string().optional(),
-    createdByRole: z.enum(['DRIVER','ADMIN']),
-    participants: z.array(participantSchema).optional(),
-    tripDetails: z.array(tripDetailSchema).optional(),
-    photos: z.array(z.object({ fileUrl: z.string().url(), caption: z.string().optional() })).optional(),
+    customerName: z.any().nullable().optional(),
+    customerExpectedFE: z.any().nullable().optional(),
+    beforeTrialsFE: z.any().nullable().optional(),
+    afterTrialsFE: z.any().nullable().optional(),
+    customerVehicleDetails: z.any().nullable().optional(),
+    issuesFoundDuringTrial: z.any().nullable().optional(),
+    trialRemarks: z.any().nullable().optional(),
+    customerRemarks: z.any().nullable().optional(),
+    createdByRole: z.any().nullable().optional(),
+    participants: z.array(participantSchema).nullable().optional(),
+    tripDetails: z.array(tripDetailSchema).nullable().optional(),
+    photos: z.array(
+        z.object({
+            fileUrl: z.any().nullable().optional(),
+            caption: z.any().nullable().optional(),
+        })
+    ).nullable().optional(),
 });
 
 export type SignOffCreateDto = z.infer<typeof signOffCreateSchema>;
