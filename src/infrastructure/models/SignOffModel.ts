@@ -12,8 +12,8 @@ import { PhotoModel } from './PhotoModel';
 
 @Table({ tableName: 'sign_offs' })
 export class SignOffModel extends Model {
-    @Column({ type: DataType.STRING, allowNull: false })
-    declare customerName: string;
+    @Column({ type: DataType.STRING, allowNull: true })
+    declare customerName: string | null;
 
     @Column({ type: DataType.FLOAT, allowNull: true })
     declare customerExpectedFE: number | null;
