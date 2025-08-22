@@ -12,6 +12,7 @@ import dotenv from 'dotenv';
 import {authRoutes} from "./infrastructure/controllers/auth.controller";
 import dashboardRoutes from "./infrastructure/routes/dashboard.route";
 import {trialFormRoutes} from "./infrastructure/routes/trial_form.routes";
+import {signoffRoutes} from "./infrastructure/routes/signoffRoutes";
 
 dotenv.config();
 
@@ -42,6 +43,7 @@ app.register(otpServicesRoutes);
 app.register(authRoutes);
 app.register(dashboardRoutes);
 app.register(trialFormRoutes);
+app.register(signoffRoutes);
 
 
 // setupTrialFormAssociations();

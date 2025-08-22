@@ -37,6 +37,7 @@
     "sequelize": "^6.37.7",
     "sequelize-typescript": "^2.1.6",
     "sqlite3": "^5.1.7",
-    "twilio": "^5.4.3"
+    "twilio": "^5.4.3",
+    "zod": "^4.0.17"
   }
 }
