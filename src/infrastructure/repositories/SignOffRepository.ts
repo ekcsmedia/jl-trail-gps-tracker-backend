@@ -6,6 +6,7 @@ import {SignOffModel} from "../models/SignOffModel";
 import {SignOffCreateDto} from "../../validations/signoffSchemas";
 import {TripDetailModel} from "../models/TripDetailModel";
 import {SignOff} from "../../core/entities/SignOff";
+import {Op} from "sequelize";
 ;
 
 export class SignOffRepository implements ISignOffRepository {
@@ -47,14 +48,20 @@ export class SignOffRepository implements ISignOffRepository {
 
     async list(page = 1, pageSize = 20, search?: string) {
         const where: any = {};
-        if (search) where.customerName = { ['like' as any]: `%${search}%` };
+
+        if (search) {
+            where.customerName = { [Op.like]: `%${search}%` }; // 👈 proper way
+        }
+
         const { rows, count } = await SignOffModel.findAndCountAll({
             where,
             include: [TripDetailModel, ParticipantModel, PhotoModel],
-            order: [['createdAt', 'DESC']],
+            order: [["createdAt", "DESC"]],
             offset: (page - 1) * pageSize,
             limit: pageSize,
+            distinct: true, // 👈 ensures correct count
         });
+
         return { items: rows, total: count, page, pageSize };
     }
 
