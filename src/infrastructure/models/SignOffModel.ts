@@ -41,7 +41,7 @@ export class SignOffModel extends Model {
 
     // ✅ NEW FIELDS
     @Column({ type: DataType.INTEGER, allowNull: true })
-    declare driverId: number | null; // link to driver (FK if you have Drivers table)
+    declare driverId: string | null; // link to driver (FK if you have Drivers table)
 
     @Default('DRAFT')
     @Column({ type: DataType.ENUM('DRAFT', 'SUBMITTED'), allowNull: false })
