@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "typeRoots": ["./types", "./node_modules/@types"],
+    "typeRoots": ["./types", "./node_modules/@types", "./src/types"],
     "target": "ES2020",                // Use a compatible target version
     "module": "commonjs",              // For Node.js
     "experimentalDecorators": true,    // Enable decorators

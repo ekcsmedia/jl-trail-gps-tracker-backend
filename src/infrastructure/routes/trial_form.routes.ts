@@ -1,5 +1,6 @@
 import { FastifyInstance } from 'fastify';
 import { TrialFormController } from '../controllers/trial_form.controller';
+import {authorizeRole} from "../../utils/jwt";
 
 export async function trialFormRoutes(app: FastifyInstance) {
     app.post('/trialForms', TrialFormController.create);

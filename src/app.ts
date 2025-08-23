@@ -13,6 +13,7 @@ import {authRoutes} from "./infrastructure/controllers/auth.controller";
 import dashboardRoutes from "./infrastructure/routes/dashboard.route";
 import {trialFormRoutes} from "./infrastructure/routes/trial_form.routes";
 import {signoffRoutes} from "./infrastructure/routes/signoffRoutes";
+import jwt from "jsonwebtoken";
 
 dotenv.config();
 
@@ -22,11 +23,13 @@ app.register(fastifyJwt, {
     secret: process.env.JWT_SECRET || 'supersecretkey', // Use env variable
 });
 
-app.decorate("authenticate", async function (request, reply) {
+
+app.decorate("authenticate", async (req, reply) => {
     try {
-        await request.jwtVerify();
+        const payload = await req.jwtVerify();
+        req.user = payload; // { id, role }
     } catch (err) {
-        reply.send(err);
+        reply.code(401).send({ message: "Unauthorized" });
     }
 });
 

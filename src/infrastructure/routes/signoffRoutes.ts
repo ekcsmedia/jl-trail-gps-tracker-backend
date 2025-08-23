@@ -1,6 +1,8 @@
 // src/infrastructure/routes/signoffRoutes.ts
 import { FastifyInstance } from 'fastify';
 import { SignOffController } from '../controllers/SignOffController';
+import {authorizeRole} from "../../utils/jwt";
+
 
 export async function signoffRoutes(app: FastifyInstance) {
     app.post('/signoffs', SignOffController.create);

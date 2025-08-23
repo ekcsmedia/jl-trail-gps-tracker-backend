@@ -5,12 +5,14 @@ import {
     getFormSubmissionHandler, updateFormSubmissionHandler
 } from "../controllers/form.submission.controller";
 import app from "../../app";
+import {authorizeRole} from "../../utils/jwt";
+
 
 
 export async function formSubmissionRoutes(fastify: FastifyInstance) {
-    fastify.post('/form-submissions', { preHandler: [app.authenticate] }, createFormSubmissionHandler);
-    fastify.get('/form-submissions', { preHandler: [app.authenticate] }, getAllFormSubmissionsHandler);
-    fastify.get('/form-submissions/:id', { preHandler: [app.authenticate] }, getFormSubmissionHandler);
-    fastify.put('/form-submissions/:id', { preHandler: [app.authenticate] }, updateFormSubmissionHandler);
-    fastify.delete('/form-submissions/:id', { preHandler: [app.authenticate] }, deleteFormSubmissionHandler);
+    fastify.post('/form-submissions', { preHandler: [app.authenticate, authorizeRole(["admin", "driver"])] }, createFormSubmissionHandler);
+    fastify.get('/form-submissions',  { preHandler: [app.authenticate, authorizeRole(["admin", "driver"])] }, getAllFormSubmissionsHandler);
+    fastify.get('/form-submissions/:id',  { preHandler: [app.authenticate, authorizeRole(["admin", "driver"])] }, getFormSubmissionHandler);
+    fastify.put('/form-submissions/:id',  { preHandler: [app.authenticate, authorizeRole(["admin", "driver"])] }, updateFormSubmissionHandler);
+    fastify.delete('/form-submissions/:id', { preHandler: [app.authenticate, authorizeRole(["admin", "driver"])] }, deleteFormSubmissionHandler);
 }
