@@ -41,6 +41,24 @@ export class TransitController {
         }
     }
 
+    static async getOngoing(req: FastifyRequest, reply: FastifyReply) {
+        try {
+            const { driverId } = req.params as any;
+
+            const transit = await TransitModel.findOne({
+                where: { driverId, status: 'ONGOING' },
+            });
+
+            if (!transit) return reply.code(404).send({ error: 'No ongoing transit found' });
+
+            return reply.send(transit);
+        } catch (err) {
+            return reply.code(500).send({ error: (err as Error).message });
+        }
+    }
+
+
+
     // List all transits (for admin)
     static async list(req: FastifyRequest, reply: FastifyReply) {
         try {
