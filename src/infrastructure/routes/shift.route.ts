@@ -1,12 +1,24 @@
 import { FastifyInstance } from 'fastify';
-import { createShift, deleteShift, getAllShifts, getShift, updateShift } from "../controllers/shift.controller";
-import {authorizeRole} from "../../utils/jwt";
+import {
+    createShift,
+    deleteShift,
+    getAllShifts,
+    getShift,
+    updateShift
+} from "../controllers/shift.controller";
+import { authorizeRole } from "../../utils/jwt";
+
+// ✅ Toggle auth for testing
+const ENABLE_AUTH = false;
 
 export default async function dailyReportRoutes(app: FastifyInstance) {
-    app.post('/dailyReport',   { preHandler: [app.authenticate, authorizeRole(["admin", "driver"])] },createShift);
-    app.get('/dailyReports/:id',  { preHandler: [app.authenticate, authorizeRole(["admin", "driver"])] },getShift);
-    app.get('/dailyReports', { preHandler: [app.authenticate, authorizeRole(["admin", "driver"])] },getAllShifts);
-    app.put('/dailyReports/:id', { preHandler: [app.authenticate, authorizeRole(["admin", "driver"])] },updateShift);
-    app.delete('/dailyReports/:id', { preHandler: [app.authenticate, authorizeRole(["admin", "driver"])] }, deleteShift);
-}
+    const preHandler = ENABLE_AUTH
+        ? { preHandler: [app.authenticate, authorizeRole(["admin", "driver"])] }
+        : {};
 
+    app.post('/dailyReport', preHandler, createShift);
+    app.get('/dailyReports/:id', preHandler, getShift);
+    app.get('/dailyReports', preHandler, getAllShifts);
+    app.put('/dailyReports/:id', preHandler, updateShift);
+    app.delete('/dailyReports/:id', preHandler, deleteShift);
+}

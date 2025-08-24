@@ -1,18 +1,25 @@
 import { FastifyInstance } from 'fastify';
 import {
-    createFormSubmissionHandler, deleteFormSubmissionHandler,
+    createFormSubmissionHandler,
+    deleteFormSubmissionHandler,
     getAllFormSubmissionsHandler,
-    getFormSubmissionHandler, updateFormSubmissionHandler
+    getFormSubmissionHandler,
+    updateFormSubmissionHandler
 } from "../controllers/form.submission.controller";
 import app from "../../app";
-import {authorizeRole} from "../../utils/jwt";
+import { authorizeRole } from "../../utils/jwt";
 
-
+// ✅ Toggle this for testing
+const ENABLE_AUTH = false;
 
 export async function formSubmissionRoutes(fastify: FastifyInstance) {
-    fastify.post('/form-submissions', { preHandler: [app.authenticate, authorizeRole(["admin", "driver"])] }, createFormSubmissionHandler);
-    fastify.get('/form-submissions',  { preHandler: [app.authenticate, authorizeRole(["admin", "driver"])] }, getAllFormSubmissionsHandler);
-    fastify.get('/form-submissions/:id',  { preHandler: [app.authenticate, authorizeRole(["admin", "driver"])] }, getFormSubmissionHandler);
-    fastify.put('/form-submissions/:id',  { preHandler: [app.authenticate, authorizeRole(["admin", "driver"])] }, updateFormSubmissionHandler);
-    fastify.delete('/form-submissions/:id', { preHandler: [app.authenticate, authorizeRole(["admin", "driver"])] }, deleteFormSubmissionHandler);
+    const preHandler = ENABLE_AUTH
+        ? { preHandler: [app.authenticate, authorizeRole(["admin", "driver"])] }
+        : {};
+
+    fastify.post('/form-submissions', preHandler, createFormSubmissionHandler);
+    fastify.get('/form-submissions', preHandler, getAllFormSubmissionsHandler);
+    fastify.get('/form-submissions/:id', preHandler, getFormSubmissionHandler);
+    fastify.put('/form-submissions/:id', preHandler, updateFormSubmissionHandler);
+    fastify.delete('/form-submissions/:id', preHandler, deleteFormSubmissionHandler);
 }

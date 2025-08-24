@@ -1,4 +1,4 @@
-import Fastify, { FastifyInstance } from 'fastify';
+import { FastifyInstance } from 'fastify';
 import twilio from 'twilio';
 import dotenv from 'dotenv';
 import {DriverModel} from "../../infrastructure/models/driver.model";
@@ -8,11 +8,10 @@ dotenv.config();
 
 const twilioClient = twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
 
-// Temporary OTP store (replace with Redis in production)
 const otpStore: { [key: string]: string } = {};
 
 export default async function otpServicesRoutes(fastify: FastifyInstance) {
-    // ✅ Send OTP Route
+
     fastify.post('/send-otp', async (request, reply) => {
         let { phone } = request.body as { phone?: string };
 
