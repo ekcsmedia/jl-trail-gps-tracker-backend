@@ -8,7 +8,7 @@ export function signDriverJWT(driverId: string) {
     );
 }
 
-export function signAdminJWT(adminId: string) {
+export function signAdminJWT(adminId: number) {
     return jwt.sign(
         { id: adminId, role: "admin" },
         process.env.JWT_SECRET!,
