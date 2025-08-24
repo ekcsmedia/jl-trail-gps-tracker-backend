@@ -14,6 +14,7 @@ import dashboardRoutes from "./infrastructure/routes/dashboard.route";
 import {trialFormRoutes} from "./infrastructure/routes/trial_form.routes";
 import {signoffRoutes} from "./infrastructure/routes/signoffRoutes";
 import jwt from "jsonwebtoken";
+import {transitRoutes} from "./infrastructure/routes/transit.route";
 
 dotenv.config();
 
@@ -47,8 +48,7 @@ app.register(authRoutes);
 app.register(dashboardRoutes);
 app.register(trialFormRoutes);
 app.register(signoffRoutes);
-
-
+app.register(transitRoutes);
 // setupTrialFormAssociations();
 
 app.get('/', async () => {
