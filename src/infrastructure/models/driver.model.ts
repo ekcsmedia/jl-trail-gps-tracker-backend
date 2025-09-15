@@ -21,6 +21,13 @@ export class DriverModel extends Model {
     @Column({ type: DataType.JSON, allowNull: false })
     proofDocs!: string[];
 
+    @Column({ type: DataType.BOOLEAN, defaultValue: false })
+    approved!: boolean;
+
+    @Column({ type: DataType.STRING, allowNull: true })
+    deviceId!: string;
+
+
     // ✅ Use the @HasOne decorator directly here to set up the relationship.
     @HasOne(() => LocationModel, { foreignKey: 'phone', sourceKey: 'phone', as: 'locationSettings' })
     locationSettings!: LocationModel;
