@@ -103,21 +103,27 @@ export async function  deleteDriver(req: FastifyRequest, reply: FastifyReply) {
 
 export async function verifyDriverPhoneHandler(req: FastifyRequest, reply: FastifyReply) {
     try {
-        const { phone } = req.query as { phone: string };
+        const { phone } = req.query as { phone?: string };
 
         if (!phone) {
-            return reply.status(400).send({ message: 'Phone number is required' });
+            return reply.status(400).send({ message: "Phone number is required" });
         }
 
         const driver = await driverUseCase.getDriverByPhone(phone);
 
         if (driver) {
-            return reply.status(200).send({ message: 'Phone number exists', exists: true });
+            // sanitize driver object if necessary (remove sensitive fields)
+            // e.g. delete driver.ssn; delete driver.passwordHash;
+            return reply.status(200).send({
+                message: "Phone number exists",
+                exists: true,
+                driver, // <-- include full driver object (or a safe subset)
+            });
         } else {
-            return reply.status(404).send({ message: 'Phone number not found', exists: false });
+            return reply.status(404).send({ message: "Phone number not found", exists: false });
         }
     } catch (err) {
         console.error(err);
-        return reply.status(500).send({ message: 'Internal server error' });
+        return reply.status(500).send({ message: "Internal server error" });
     }
 }

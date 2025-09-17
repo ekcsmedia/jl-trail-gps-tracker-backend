@@ -41,6 +41,8 @@ export default async function otpServicesRoutes(fastify: FastifyInstance) {
 
     // 🚀 Step 2: Verify OTP → Approve driver & bind device
     fastify.post('/verify-otp', async (request, reply) => {
+        console.log('VERIFY-OTP incoming body:', request.body);
+
         let { phone, otp, deviceId } = request.body as { phone?: string; otp?: string; deviceId?: string };
 
         if (!phone || !otp || !deviceId) {
