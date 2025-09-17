@@ -111,19 +111,25 @@ export class SignOffRepository implements ISignOffRepository {
 
     async getDraftForDriver(driverId: string): Promise<SignOff | null> {
         return await SignOffModel.findOne({
-            where: { createdBy: driverId, status: "DRAFT" },
+            where: { driverId, status: "DRAFT" },
+            include: [TripDetailModel, ParticipantModel, PhotoModel],
         });
     }
 
 // repository
     async createDraftForDriver(data: any) {
-        let draft: SignOffModel;
-        draft = await SignOffModel.create({
-            ...data,
-            isSubmitted: false,
+        // Check if a draft already exists
+        const existing = await SignOffModel.findOne({
+            where: { driverId: data.driverId, status: "DRAFT" },
         });
 
-        return draft; // Sequelize instance (with ID)
+        if (existing) return existing;
+
+        return await SignOffModel.create({
+            ...data,
+            status: 'DRAFT',
+            isSubmitted: false,
+        });
     }
 
 
