@@ -18,13 +18,14 @@ export class LocationRepository {
     }
 
     static async upsertLocation(phone: string, latitude: number, longitude: number, isIdle: boolean) {
+        console.log('upsertLocation called:', { phone, latitude, longitude, isIdle, at: new Date().toISOString() });
         try {
             // Check if location exists by phone
             const existingLocation: any = await LocationModel.findOne({ where: { phone } });
 
             if (existingLocation) {
-                // If driver is idle, do not update latitude and longitude
                 if (isIdle) {
+                    await existingLocation.update({ isIdle, timestamp: new Date() });
                     return {
                         message: "Driver is idle. Latitude and longitude not updated.",
                         location: existingLocation
