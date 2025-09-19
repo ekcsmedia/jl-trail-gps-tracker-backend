@@ -21,6 +21,6 @@ export default async function dailyReportRoutes(app: FastifyInstance) {
     app.get('/dailyReports', preHandler, getAllShifts);
     app.put('/dailyReports/:id', preHandler, updateShift);
     app.delete('/dailyReports/:id', preHandler, deleteShift);
-    app.get('/dailyReports/latest', preHandler, getLatestDailyReportHandler);
+    app.get('/dailyReports/latest', getLatestDailyReportHandler);
 
 }
