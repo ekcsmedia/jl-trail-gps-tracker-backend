@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from 'fastify';
 import {ShiftLog} from "../../core/entities/daily.report.entity";
 import {ShiftLogRepositoryImpl} from "../repositories/shift.repository";
 import {ShiftUseCases} from "../../application/shift-use-case";
+import {ShiftLogModel} from "../models/daily.report.model";
 
 const repository = new ShiftLogRepositoryImpl();
 const shiftUseCases = new ShiftUseCases(repository);
@@ -40,3 +41,30 @@ export async function deleteShift(req: FastifyRequest, reply: FastifyReply) {
     return reply.status(200).send({ message: 'Shift deleted successfully' });
 }
 
+export async function getLatestDailyReportHandler(req: FastifyRequest, reply: FastifyReply) {
+    try {
+        const { phone } = req.query as { phone?: string };
+
+        if (!phone) {
+            return reply.status(400).send({ success: false, message: 'phone query param is required' });
+        }
+
+        // Find latest report by employeePhoneNo (descending createdAt)
+        const latest = await ShiftLogModel.findOne({
+            where: { employeePhoneNo: phone },
+            order: [['createdAt', 'DESC']],
+        });
+
+        if (!latest) {
+            return reply.status(404).send({ success: false, message: 'No report found for this phone' });
+        }
+
+        // Convert to plain object (strip sequelize metadata)
+        const payload = latest.get({ plain: true });
+
+        return reply.status(200).send({ success: true, payload });
+    } catch (err) {
+        console.error('getLatestDailyReportHandler error', err);
+        return reply.status(500).send({ success: false, message: 'Internal server error' });
+    }
+}

@@ -2,7 +2,7 @@ import { FastifyInstance } from 'fastify';
 import {
     createShift,
     deleteShift,
-    getAllShifts,
+    getAllShifts, getLatestDailyReportHandler,
     getShift,
     updateShift
 } from "../controllers/shift.controller";
@@ -21,4 +21,6 @@ export default async function dailyReportRoutes(app: FastifyInstance) {
     app.get('/dailyReports', preHandler, getAllShifts);
     app.put('/dailyReports/:id', preHandler, updateShift);
     app.delete('/dailyReports/:id', preHandler, deleteShift);
+    app.get('/dailyReports/latest', preHandler, getLatestDailyReportHandler);
+
 }
