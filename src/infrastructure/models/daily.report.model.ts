@@ -214,6 +214,14 @@ ShiftLogModel.init(
             type: DataTypes.STRING,
             allowNull: false,
         },
+        region: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        allocation: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
     },
     {
         sequelize,

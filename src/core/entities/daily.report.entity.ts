@@ -1,3 +1,5 @@
+import {DataTypes} from "sequelize";
+
 export class ShiftLog {
     id!: string;
     shift!: string;
@@ -51,6 +53,8 @@ export class ShiftLog {
     vehicleOdometerEndingReading!: string;
     trialKMS! : string;
     trialAllocation!: string;
+    region!: string;
+    allocation!: string;
     constructor(partial: Partial<ShiftLog>) {
         Object.assign(this, partial);
     }
