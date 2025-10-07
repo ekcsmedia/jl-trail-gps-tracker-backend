@@ -10,6 +10,10 @@ ShiftLogModel.init(
             primaryKey: true,
             autoIncrement: true,
         },
+        date: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
         shift: {
             type: DataTypes.STRING,
             allowNull: false,

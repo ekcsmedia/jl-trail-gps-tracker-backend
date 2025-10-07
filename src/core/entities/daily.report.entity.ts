@@ -3,6 +3,7 @@ import {DataTypes} from "sequelize";
 export class ShiftLog {
     id!: string;
     shift!: string;
+    date!: string;
     otHours!: number;
     inTime!: Date;
     outTime!: Date;
