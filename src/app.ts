@@ -1,3 +1,5 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import fastify from 'fastify';
 import driverRoutes from "./infrastructure/routes/driver.routes";
 import {sequelize} from "./utils/database";
@@ -8,15 +10,14 @@ import {formSubmissionRoutes} from "./infrastructure/routes/form.submission.rout
 import driverLocationRoutes from "./infrastructure/routes/driver.location.routes";
 import otpServicesRoutes from "./utils/otp-services/send-otp";
 import fastifyJwt from "@fastify/jwt";
-import dotenv from 'dotenv';
 import {authRoutes} from "./infrastructure/controllers/auth.controller";
 import dashboardRoutes from "./infrastructure/routes/dashboard.route";
 import {trialFormRoutes} from "./infrastructure/routes/trial_form.routes";
 import {signoffRoutes} from "./infrastructure/routes/signoffRoutes";
 import jwt from "jsonwebtoken";
 import {transitRoutes} from "./infrastructure/routes/transit.route";
+const axios = require('axios');
 
-dotenv.config();
 
 const app = fastify(); // sever
 
@@ -57,6 +58,40 @@ app.get('/', async () => {
 
 app.get('/api/protected', { preHandler: [app.authenticate] }, async (request, reply) => {
     return { secure: true, user: request.user };
+});
+
+const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
+
+app.post('/api/directions', async (request, reply) => {
+    // Expected body: { origin: "lat,lng", destination: "lat,lng" }
+    const { origin, destination } = request.body as any;
+
+    if (!origin || !destination) {
+        return reply.status(400).send({ error: 'Missing origin or destination coordinates.' });
+    }
+
+    const directionsUrl = 'https://maps.googleapis.com/maps/api/directions/json';
+
+    try {
+        const response = await axios.get(directionsUrl, {
+            params: {
+                origin: origin,
+                destination: destination,
+                mode: 'driving',
+                alternatives: false,
+                departure_time: 'now',
+                traffic_model: 'best_guess',
+                key: GOOGLE_MAPS_API_KEY, // Key is used securely on the backend
+            },
+        });
+
+        // Forward the response from Google Maps back to the client
+        return response.data;
+
+    } catch (error) {
+        console.log(`Error fetching directions: ${error.message}`);
+        return reply.status(500).send({ error: 'Failed to fetch directions from external API.' });
+    }
 });
 
 // Sync database
