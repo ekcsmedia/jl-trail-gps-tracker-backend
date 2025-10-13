@@ -94,6 +94,49 @@ app.post('/api/directions', async (request, reply) => {
     }
 });
 
+
+app.post('/api/distancematrix', async (request, reply) => {
+    // Expected body: { origins: ["lat,lng"], destinations: ["lat,lng"] }
+    // The client sends an array even if it's just one origin/destination.
+    const { origins, destinations } = request.body as any;
+
+    if (!origins || !destinations || !Array.isArray(origins) || !Array.isArray(destinations)) {
+        return reply.status(400).send({ error: 'Missing or invalid origins or destinations arrays.' });
+    }
+
+    if (origins.length === 0 || destinations.length === 0) {
+        return reply.status(400).send({ error: 'Origins and destinations arrays must not be empty.' });
+    }
+
+    const distanceMatrixUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json';
+
+    try {
+        const response = await axios.get(distanceMatrixUrl, {
+            params: {
+                // Joins the array of strings into a comma-separated string required by Google
+                origins: origins.join('|'),
+                destinations: destinations.join('|'),
+                mode: 'driving',
+                // This parameter is crucial for calculating a time based on current traffic
+                // which is what your frontend uses to get a more accurate ETA.
+                departure_time: 'now',
+                key: GOOGLE_MAPS_API_KEY, // Key is used securely on the backend
+            },
+        });
+
+        // Forward the response from Google Maps back to the client
+        return response.data;
+
+    } catch (error) {
+        // Log the error for server-side debugging
+        console.log(`Error fetching distance matrix: ${error.message}`);
+
+        // Respond with a generic 500 error to the client
+        return reply.status(500).send({ error: 'Failed to fetch distance matrix from external API.' });
+    }
+});
+
+
 // Sync database
 sequelize.sync({ alter: true }) // Use `alter: true` for schema updates
     .then(() => console.log('Database synchronized'))
