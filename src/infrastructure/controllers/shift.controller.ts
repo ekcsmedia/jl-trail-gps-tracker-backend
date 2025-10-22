@@ -14,6 +14,14 @@ export async function createShift(req: FastifyRequest, reply: FastifyReply) {
     return reply.status(201).send({ message: "Shift data created successfully", payload: shift });
 }
 
+type Query = {
+    page?: string;
+    pageSize?: string;
+    start?: string;
+    end?: string;
+    driver?: string;
+};
+
 export async function getShift(req: FastifyRequest, reply: FastifyReply) {
     const { id } = req.params as { id: string };
     const shift = await shiftUseCases.getShift(id);
@@ -21,9 +29,35 @@ export async function getShift(req: FastifyRequest, reply: FastifyReply) {
     return reply.status(200).send({ message: "Shift data fetched successfully", payload: shift });
 }
 
-export async function getAllShifts(req: FastifyRequest, reply: FastifyReply) {
-    const shifts = await shiftUseCases.getAllShifts();
-    return reply.status(200).send({ message: "Shift data fetched successfully", payload: shifts });
+export async function getAllShifts(req: FastifyRequest<{ Querystring: Query }>, reply: FastifyReply) {
+    try {
+        const {
+            page = '1',
+            pageSize = '20',
+            start,
+            end,
+            driver,
+        } = req.query || {};
+
+        const pageNum = Math.max(1, parseInt(page, 10) || 1);
+        const sizeNum = Math.min(200, Math.max(1, parseInt(pageSize, 10) || 20)); // cap pageSize
+
+        const result = await shiftUseCases.getAllShifts({
+            page: pageNum,
+            pageSize: sizeNum,
+            start,
+            end,
+            driver,
+        });
+
+        return reply.status(200).send({
+            message: 'Shift data fetched successfully',
+            payload: result, // { items, page, pageSize, total, totalPages }
+        });
+    } catch (err) {
+        req.log.error(err);
+        return reply.status(500).send({ message: 'Failed to fetch shifts' });
+    }
 }
 
 export async function updateShift(req: FastifyRequest, reply: FastifyReply) {

@@ -1,6 +1,15 @@
 import {ShiftLogRepositoryImpl} from "../infrastructure/repositories/shift.repository";
 import {ShiftLog, ShiftLogEntityWithoutId} from "../core/entities/daily.report.entity";
 
+type GetAllParams = {
+    page: number;
+    pageSize: number;
+    start?: string;
+    end?: string;
+    driver?: string;
+};
+
+
 export class ShiftUseCases {
     constructor(private shiftRepository: ShiftLogRepositoryImpl) {}
 
@@ -12,8 +21,20 @@ export class ShiftUseCases {
         return this.shiftRepository.findById(id);
     }
 
-    async getAllShifts(): Promise<ShiftLog[]> {
-        return this.shiftRepository.findAll();
+
+    async getAllShifts(params: GetAllParams) {
+        const { rows, count } = await this.shiftRepository.findAll(params);
+        const { page, pageSize } = params;
+        const total = count;
+        const totalPages = Math.max(1, Math.ceil(total / pageSize));
+
+        return {
+            items: rows,
+            page,
+            pageSize,
+            total,
+            totalPages,
+        };
     }
 
     async updateShift(id: string, shift: Partial<ShiftLog>): Promise<ShiftLog | null> {
