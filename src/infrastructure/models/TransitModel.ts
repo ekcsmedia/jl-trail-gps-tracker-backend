@@ -14,7 +14,7 @@ import {DriverModel} from "./driver.model";
 export class TransitModel extends Model {
     @ForeignKey(() => DriverModel)
     @Column({ type: DataType.UUID, allowNull: true  })
-    declare driverId: string;
+    declare driverId?: string;
 
     @Column({ type: DataType.FLOAT, allowNull: false })
     declare startLatitude: number;
@@ -38,6 +38,12 @@ export class TransitModel extends Model {
     @Column({ type: DataType.DATE, allowNull: true })
     declare endedAt: Date | null;
 
-    @BelongsTo(() => DriverModel)
+    @BelongsTo(() => DriverModel, {
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+        foreignKey: { name: 'driverId', allowNull: true }, // <-- explicit
+        targetKey: 'id',
+    })
+
     declare driver: DriverModel;
 }
