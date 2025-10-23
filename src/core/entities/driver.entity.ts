@@ -6,5 +6,6 @@ export class DriverEntity {
         public employeeId: string,
         public address: string,
         public proofDocs: string[],
+        public drivingLicenseExpiryDate: string,
     ) {}
 }

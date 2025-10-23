@@ -10,7 +10,7 @@ export class DriverModel extends Model {
     name!: string;
 
     @Column({ type: DataType.STRING, allowNull: false, unique: true })
-    phone!: string;  // Make sure phone is a string to match with LocationModel
+    phone!: string;
 
     @Column({ type: DataType.STRING, allowNull: false })
     employeeId!: string;
@@ -27,8 +27,10 @@ export class DriverModel extends Model {
     @Column({ type: DataType.STRING, allowNull: true })
     deviceId!: string;
 
+    // NEW: Driving license expiry (date-only)
+    @Column({ type: DataType.DATEONLY, allowNull: true })
+    drivingLicenseExpiryDate?: string | Date;
 
-    // ✅ Use the @HasOne decorator directly here to set up the relationship.
     @HasOne(() => LocationModel, { foreignKey: 'phone', sourceKey: 'phone', as: 'locationSettings' })
     locationSettings!: LocationModel;
 }
