@@ -13,7 +13,7 @@ import {DriverModel} from "./driver.model";
 @Table({ tableName: 'transits' })
 export class TransitModel extends Model {
     @ForeignKey(() => DriverModel)
-    @Column({ type: DataType.UUID, allowNull: false })
+    @Column({ type: DataType.UUID, allowNull: true  })
     declare driverId: string;
 
     @Column({ type: DataType.FLOAT, allowNull: false })
