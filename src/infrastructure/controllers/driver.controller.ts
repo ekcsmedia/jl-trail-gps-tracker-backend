@@ -8,12 +8,13 @@ const repository = new DriverRepositoryImpl();
 const driverUseCase = new DriverUseCase(repository);
 
 export async function createDriverHandler(req: FastifyRequest, reply: FastifyReply) {
-    const { name, phone, employeeId, address, proofDocs } = req.body as {
+    const { name, phone, employeeId, address, proofDocs, drivingLicenseExpiryDate } = req.body as {
         name: string;
         phone: number;
         employeeId: string;
         address: string;
         proofDocs : [];
+        drivingLicenseExpiryDate : string
     };
 
     const driver = await driverUseCase.createDriver({
@@ -22,7 +23,8 @@ export async function createDriverHandler(req: FastifyRequest, reply: FastifyRep
         phone,
         employeeId,
         address,
-        proofDocs
+        proofDocs,
+        drivingLicenseExpiryDate
     });
 
     reply.send({message:"Driver data create successfully", payload: driver});
@@ -49,6 +51,7 @@ export async function getAllDriversHandler(req: FastifyRequest, reply: FastifyRe
             address: driver.address,
             locationEnabled: driver.locationSettings?.locationEnabled ?? false,
             proofDocs : driver.proofDocs,
+            drivingLicenseExpiryDate : driver.drivingLicenseExpiryDate
         }));
 
         reply.send({ success: true, data: result });
