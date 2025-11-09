@@ -3,29 +3,35 @@ import { DriverUseCase } from '../../application/driver-use-case';
 import {DriverModel, DriverRepositoryImpl} from "../repositories/driver.repositories";
 import {DriverEntity} from "../../core/entities/driver.entity";
 import {LocationModel} from "../models/location.model";
+import {DocumentModel} from "../models/Document";
+import {Op} from "sequelize";
 
 const repository = new DriverRepositoryImpl();
 const driverUseCase = new DriverUseCase(repository);
 
 export async function createDriverHandler(req: FastifyRequest, reply: FastifyReply) {
-    const { name, phone, employeeId, address, proofDocs, drivingLicenseExpiryDate } = req.body as {
-        name: string;
-        phone: number;
-        employeeId: string;
-        address: string;
-        proofDocs : [];
-        drivingLicenseExpiryDate : string
-    };
 
-    const driver = await driverUseCase.createDriver({
-        id: '',
-        name,
-        phone,
-        employeeId,
-        address,
-        proofDocs,
-        drivingLicenseExpiryDate
+    const body = req.body as any;
+
+    const { name, phone, employeeId, address, drivingLicenseExpiryDate, approved, deviceId,
+        draftId, documentIds } = body;
+
+    const driver = await DriverModel.create({
+        name, phone, employeeId, address, drivingLicenseExpiryDate, approved: !!approved, deviceId
     });
+
+    // Attach by documentIds
+    if (Array.isArray(documentIds) && documentIds.length) {
+        await DocumentModel.update({ driverId: driver.id }, { where: { id: { [Op.in]: documentIds } } });
+    }
+
+    // Attach by draftId
+    if (draftId) {
+        await DocumentModel.update(
+            { driverId: driver.id },
+            { where: { driverId: null, metadata: { draftId } } as any }
+        );
+    }
 
     reply.send({message:"Driver data create successfully", payload: driver});
 }

@@ -1,5 +1,6 @@
-import { Table, Column, Model, DataType, HasOne } from 'sequelize-typescript';
+import {Table, Column, Model, DataType, HasOne, HasMany} from 'sequelize-typescript';
 import { LocationModel } from './location.model';
+import {DocumentModel} from "./Document";
 
 @Table({ tableName: 'drivers', timestamps: true })
 export class DriverModel extends Model {
@@ -33,4 +34,7 @@ export class DriverModel extends Model {
 
     @HasOne(() => LocationModel, { foreignKey: 'phone', sourceKey: 'phone', as: 'locationSettings' })
     locationSettings!: LocationModel;
+
+    @HasMany(() => DocumentModel)
+    declare documents?: DocumentModel[];
 }
