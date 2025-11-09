@@ -56,7 +56,6 @@ export async function getAllDriversHandler(req: FastifyRequest, reply: FastifyRe
             employeeId: driver.employeeId,
             address: driver.address,
             locationEnabled: driver.locationSettings?.locationEnabled ?? false,
-            proofDocs : driver.proofDocs,
             drivingLicenseExpiryDate : driver.drivingLicenseExpiryDate
         }));
 
