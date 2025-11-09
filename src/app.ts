@@ -16,6 +16,7 @@ import {trialFormRoutes} from "./infrastructure/routes/trial_form.routes";
 import {signoffRoutes} from "./infrastructure/routes/signoffRoutes";
 import jwt from "jsonwebtoken";
 import {transitRoutes} from "./infrastructure/routes/transit.route";
+import {documentRoutes} from "./infrastructure/routes/document.routes";
 const axios = require('axios');
 
 
@@ -50,6 +51,9 @@ app.register(dashboardRoutes);
 app.register(trialFormRoutes);
 app.register(signoffRoutes);
 app.register(transitRoutes);
+app.register(documentRoutes);
+
+
 // setupTrialFormAssociations();
 
 app.get('/', async () => {
