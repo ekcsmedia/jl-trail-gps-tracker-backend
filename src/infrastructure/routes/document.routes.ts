@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { PutObjectCommand, DeleteObjectCommand, HeadObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { v4 as uuidv4 } from "uuid";
+import { randomUUID } from "crypto";
 import { Document } from "../../infrastructure/models/Document";
 import {s3} from "../../utils/b2";
 
@@ -20,7 +20,7 @@ export async function documentRoutes(fastify: FastifyInstance) {
         const { files = [], userId } = body;
 
         const results = await Promise.all(files.map(async (f: any) => {
-            const id = uuidv4();
+            const id = randomUUID();
             const ext = (f.fileName?.split(".").pop() || "bin").toLowerCase();
             const key = `uploads/${new Date().getFullYear()}/${(new Date().getMonth()+1)
                 .toString().padStart(2,"0")}/${new Date().getDate().toString().padStart(2,"0")}/${id}_${f.fileName}`;
