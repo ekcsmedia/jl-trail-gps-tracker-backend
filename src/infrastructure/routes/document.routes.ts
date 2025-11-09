@@ -80,20 +80,26 @@ export const documentRoutes = fp(async (fastify: FastifyInstance, _opts: Fastify
         }
     });
 
+// routes/document.routes.ts (snippet)
     fastify.get("/documents", async (req, reply) => {
-        const { page = 1, pageSize = 20, userId } = (req.query as any);
-        const where: any = {};
-        if (userId) where.userId = userId;
+        const { page = 1, pageSize = 20, driverId } = (req.query as any);
 
-        const pageNum = Number(page) || 1;
-        const pageSz = Math.min(100, Number(pageSize) || 20);
+        // Enforce driver scoping
+        if (!driverId || typeof driverId !== "string" || driverId.trim() === "") {
+            return reply.code(400).send({ ok: false, error: "driverId query param is required" });
+        }
+
+        const pageNum = Math.max(1, Number(page) || 1);
+        const pageSz = Math.min(100, Math.max(1, Number(pageSize) || 20));
 
         const { rows, count } = await DocumentModel.findAndCountAll({
-            where,
+            where: { driverId: driverId.trim() },
             order: [["createdAt", "DESC"]],
             offset: (pageNum - 1) * pageSz,
             limit: pageSz,
         });
+
         return reply.send({ ok: true, count, page: pageNum, pageSize: pageSz, items: rows });
     });
+
 });
