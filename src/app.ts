@@ -17,6 +17,8 @@ import {signoffRoutes} from "./infrastructure/routes/signoffRoutes";
 import jwt from "jsonwebtoken";
 import {transitRoutes} from "./infrastructure/routes/transit.route";
 import {documentRoutes} from "./infrastructure/routes/document.routes";
+import multipart from "@fastify/multipart";
+
 const axios = require('axios');
 
 
@@ -40,6 +42,9 @@ app.register(cors, {
     origin: '*', // Allows all domains (not recommended for production)
 });
 
+app.register(multipart, { limits: { fileSize: 50 * 1024 * 1024 } });
+
+
 app.register(driverRoutes);
 app.register(clientRoutes);
 app.register(dailyReportRoutes);
@@ -52,6 +57,7 @@ app.register(trialFormRoutes);
 app.register(signoffRoutes);
 app.register(transitRoutes);
 app.register(documentRoutes);
+
 
 
 // setupTrialFormAssociations();

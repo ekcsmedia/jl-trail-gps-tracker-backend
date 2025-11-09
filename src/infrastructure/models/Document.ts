@@ -1,51 +1,51 @@
-// infrastructure/models/Document.ts
+// src/infrastructure/models/Document.ts
 import {
-    Table, Column, Model, DataType, PrimaryKey, Default, AllowNull, Unique, Index,
-    CreatedAt, UpdatedAt
+    Table, Column, Model, DataType, PrimaryKey, Default,
+    AllowNull, Unique, CreatedAt, UpdatedAt, Index
 } from 'sequelize-typescript';
 
 @Table({ tableName: 'documents' })
-export class Document extends Model<Document> {
+export class DocumentModel extends Model<DocumentModel> {
     @PrimaryKey
     @Default(DataType.UUIDV4)
     @Column(DataType.UUID)
-    id!: string;
+    declare id: string;
 
     @Index
     @AllowNull(true)
     @Column(DataType.STRING)
-    userId!: string | null;
+    declare userId: string | null;
 
     @AllowNull(false)
     @Column(DataType.STRING)
-    bucket!: string;
+    declare bucket: string;
 
     @AllowNull(false)
     @Unique
     @Column(DataType.STRING)
-    key!: string;  // e.g. uploads/2025/11/09/uuid_filename.pdf
+    declare key: string;
 
     @AllowNull(true)
     @Column(DataType.STRING)
-    contentType!: string | null;
+    declare contentType: string | null;
 
     @AllowNull(true)
     @Column(DataType.BIGINT)
-    size!: number | null;
+    declare size: number | null;
 
     @AllowNull(false)
     @Column(DataType.STRING)
-    url!: string;  // public or base URL for presigned GET
+    declare url: string;
 
     @AllowNull(true)
     @Column(DataType.JSON)
-    metadata!: Record<string, any> | null;
+    declare metadata: Record<string, any> | null;
 
     @CreatedAt
     @Column(DataType.DATE)
-    createdAt!: Date;
+    declare createdAt: Date;
 
     @UpdatedAt
     @Column(DataType.DATE)
-    updatedAt!: Date;
+    declare updatedAt: Date;
 }

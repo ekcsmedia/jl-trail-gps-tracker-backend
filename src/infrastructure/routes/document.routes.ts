@@ -1,96 +1,85 @@
-import { FastifyInstance } from "fastify";
-import {
-    PutObjectCommand,
-    DeleteObjectCommand,
-    HeadObjectCommand,
-    GetObjectCommand
-} from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { randomUUID } from "crypto";
+// routes/document.routes.ts
+import { FastifyInstance, FastifyPluginOptions } from "fastify";
+import fp from "fastify-plugin";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+import {B2_BUCKET, deleteObject, s3} from "../../utils/b2";
+import {DocumentModel} from "../models/Document";
 
-import { Document } from "../../infrastructure/models/Document";
-import { s3 } from "../../utils/b2";
+export const documentRoutes = fp(async (fastify: FastifyInstance, _opts: FastifyPluginOptions) => {
+    // expects fastify-multipart to be registered globally:
 
-const BUCKET = (process.env.B2_BUCKET_NAME || "").trim();
-const PUBLIC_BASE_URL = (process.env.PUBLIC_BASE_URL || "").trim();
+    fastify.post<{ Body: any }>("/documents/upload", async (req, reply) => {
+        if (!req.isMultipart()) return reply.code(400).send({ message: "multipart/form-data required" });
 
-if (!BUCKET) throw new Error("B2_BUCKET_NAME missing");
+        const fields: Record<string, string> = {};
+        let fileBuffer: Buffer | undefined;
+        let fileMime = "application/octet-stream";
+        let fileName = "upload.bin";
 
-export async function documentRoutes(fastify: FastifyInstance) {
-    // Create presigned PUT for one or many files
-    fastify.post("/documents/presign", async (req, reply) => {
-        try {
-            const body = (req.body as any) ?? {};
-            const files = Array.isArray(body.files) ? body.files : [];
-            const userId = body.userId ?? null;
-
-            if (!files.length) {
-                return reply.code(400).send({ ok: false, error: "files array required" });
+        for await (const part of req.parts()) {
+            if (part.type === "field") {
+                fields[part.fieldname] = (part.value as string) ?? "";
+                continue;
             }
-
-            const now = new Date();
-            const yyyy = now.getFullYear();
-            const mm = String(now.getMonth() + 1).padStart(2, "0");
-            const dd = String(now.getDate()).padStart(2, "0");
-
-            const results = await Promise.all(
-                files.map(async (f: any) => {
-                    const id = randomUUID();
-                    const fileName = String(f.fileName || "file.bin").replace(/[^\w.\-]/g, "_");
-                    const key = `uploads/${yyyy}/${mm}/${dd}/${id}_${fileName}`;
-                    const contentType = f.contentType || "application/octet-stream";
-
-                    const cmd = new PutObjectCommand({
-                        Bucket: BUCKET,
-                        Key: key,
-                        ContentType: contentType,
-                    });
-
-                    // With checksum middleware removed on the client, URL won't include x-amz-sdk-checksum-*
-                    const putUrl = await getSignedUrl(s3, cmd, { expiresIn: 60 * 10 });
-
-                    const publicUrl = PUBLIC_BASE_URL ? `${PUBLIC_BASE_URL}/${key}` : "";
-
-                    const doc = await Document.create({
-                        userId,
-                        bucket: BUCKET,
-                        key,
-                        contentType,
-                        size: f.size ?? null,
-                        url: publicUrl,
-                        metadata: { originalName: f.fileName },
-                    });
-
-                    return { id: doc.id, key, putUrl, publicUrl };
-                })
-            );
-
-            return reply.send({ ok: true, results });
-        } catch (e: any) {
-            fastify.log.error(e, "presign error");
-            return reply.code(500).send({ ok: false, error: e?.message || "internal_error" });
+            if (part.type === "file") {
+                if (part.fieldname !== "file") { part.file.resume(); continue; }
+                fileMime = part.mimetype || fileMime;
+                fileName = part.filename || fileName;
+                fileBuffer = await part.toBuffer(); // read into memory (simple)
+            }
         }
-    });
 
-    // Confirm upload (optional): HEAD object -> update size/contentType
-    fastify.post("/documents/:id/confirm", async (req, reply) => {
+        if (!fileBuffer) return reply.code(400).send({ message: "file required" });
+
+        // optional: who owns this file?
+        const userId = (fields["userId"] || "").trim() || null;
+
+        // where to store: optional folder params
+        const folder = (fields["folder"] || "uploads").replace(/[^a-z0-9/_-]/gi, "_");
+        const key = `${folder}/${new Date().getFullYear()}/${String(new Date().getMonth()+1).padStart(2,"0")}/${String(new Date().getDate()).padStart(2,"0")}/${Date.now()}_${fileName.replace(/[^\w.\-]/g,"_")}`;
+
         try {
-            const { id } = req.params as any;
-            const doc = await Document.findByPk(id);
-            if (!doc) return reply.code(404).send({ ok: false, error: "Not found" });
+            await s3.send(new PutObjectCommand({
+                Bucket: B2_BUCKET,
+                Key: key,
+                Body: fileBuffer,
+                ContentType: fileMime,
+                ContentLength: fileBuffer.length,
+            }));
 
-            const head = await s3.send(new HeadObjectCommand({ Bucket: doc.bucket, Key: doc.key }));
-            await doc.update({
-                size: Number(head.ContentLength ?? doc.size ?? 0),
-                contentType: String(head.ContentType ?? doc.contentType ?? ""),
+            const url = `/api/files/download?key=${encodeURIComponent(key)}`;
+
+            const doc = await DocumentModel.create({
+                userId,
+                bucket: B2_BUCKET,
+                key,
+                contentType: fileMime,
+                size: fileBuffer.length,
+                url,
+                metadata: { originalName: fileName },
             });
-            return reply.send({ ok: true, document: doc });
-        } catch {
-            return reply.code(400).send({ ok: false, error: "Object not found in bucket yet" });
+
+            return reply.code(201).send({ ok: true, document: doc });
+        } catch (err: any) {
+            req.log.error({ err }, "Upload failed");
+            return reply.code(500).send({ ok: false, message: "Upload failed", details: err?.message });
         }
     });
 
-    // List (basic pagination)
+    fastify.delete<{ Params: { id: string } }>("/documents/:id", async (req, reply) => {
+        const doc = await DocumentModel.findByPk(req.params.id);
+        if (!doc) return reply.code(404).send({ ok: false, message: "Not found" });
+
+        try {
+            await deleteObject(doc.key);
+            await doc.destroy();
+            return reply.code(204).send();
+        } catch (err: any) {
+            req.log.error({ err }, "Delete failed");
+            return reply.code(500).send({ ok: false, message: "Delete failed" });
+        }
+    });
+
     fastify.get("/documents", async (req, reply) => {
         const { page = 1, pageSize = 20, userId } = (req.query as any);
         const where: any = {};
@@ -99,7 +88,7 @@ export async function documentRoutes(fastify: FastifyInstance) {
         const pageNum = Number(page) || 1;
         const pageSz = Math.min(100, Number(pageSize) || 20);
 
-        const { rows, count } = await Document.findAndCountAll({
+        const { rows, count } = await DocumentModel.findAndCountAll({
             where,
             order: [["createdAt", "DESC"]],
             offset: (pageNum - 1) * pageSz,
@@ -107,26 +96,4 @@ export async function documentRoutes(fastify: FastifyInstance) {
         });
         return reply.send({ ok: true, count, page: pageNum, pageSize: pageSz, items: rows });
     });
-
-    // Download (presigned GET). If bucket is PUBLIC, you can return doc.url directly.
-    fastify.get("/documents/:id/download", async (req, reply) => {
-        const { id } = req.params as any;
-        const doc = await Document.findByPk(id);
-        if (!doc) return reply.code(404).send({ ok: false, error: "Not found" });
-
-        const cmd = new GetObjectCommand({ Bucket: doc.bucket, Key: doc.key });
-        const downloadUrl = await getSignedUrl(s3, cmd, { expiresIn: 60 * 5 });
-        return reply.send({ ok: true, downloadUrl, key: doc.key });
-    });
-
-    // Delete (S3 + DB)
-    fastify.delete("/documents/:id", async (req, reply) => {
-        const { id } = req.params as any;
-        const doc = await Document.findByPk(id);
-        if (!doc) return reply.code(404).send({ ok: false, error: "Not found" });
-
-        await s3.send(new DeleteObjectCommand({ Bucket: doc.bucket, Key: doc.key }));
-        await doc.destroy();
-        return reply.send({ ok: true });
-    });
-}
+});
