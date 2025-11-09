@@ -19,6 +19,7 @@ import {transitRoutes} from "./infrastructure/routes/transit.route";
 import {documentRoutes} from "./infrastructure/routes/document.routes";
 import multipart from "@fastify/multipart";
 import {driverDocumentsRoutes} from "./infrastructure/routes/driver-documents.routes";
+import {filesRoutes} from "./infrastructure/routes/files.routes";
 
 const axios = require('axios');
 
@@ -59,7 +60,7 @@ app.register(signoffRoutes);
 app.register(transitRoutes);
 app.register(documentRoutes);
 app.register(driverDocumentsRoutes);
-
+app.register(filesRoutes);
 
 // setupTrialFormAssociations();
 
