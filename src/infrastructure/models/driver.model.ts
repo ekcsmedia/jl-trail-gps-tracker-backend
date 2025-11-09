@@ -19,9 +19,6 @@ export class DriverModel extends Model {
     @Column({ type: DataType.STRING, allowNull: false })
     address!: string;
 
-    @Column({ type: DataType.JSON, allowNull: false })
-    proofDocs!: string[];
-
     @Column({ type: DataType.BOOLEAN, defaultValue: false })
     approved!: boolean;
 
