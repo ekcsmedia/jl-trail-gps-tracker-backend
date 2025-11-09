@@ -1,5 +1,6 @@
 // src/lib/b2.ts
 import { S3Client } from "@aws-sdk/client-s3";
+import { flexibleChecksumsMiddlewareOptions } from "@aws-sdk/middleware-flexible-checksums";
 
 export const s3 = new S3Client({
     region: process.env.B2_REGION!,
@@ -12,3 +13,5 @@ export const s3 = new S3Client({
 });
 
 export const B2_BUCKET = process.env.B2_BUCKET_NAME!;
+
+s3.middlewareStack.remove(flexibleChecksumsMiddlewareOptions.name);

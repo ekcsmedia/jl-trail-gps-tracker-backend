@@ -46,7 +46,7 @@ export async function documentRoutes(fastify: FastifyInstance) {
                         ContentType: contentType,
                     });
 
-                    // With checksum middleware removed, this URL won't include x-amz-sdk-checksum-* params
+                    // With checksum middleware removed on the client, URL won't include x-amz-sdk-checksum-*
                     const putUrl = await getSignedUrl(s3, cmd, { expiresIn: 60 * 10 });
 
                     const publicUrl = PUBLIC_BASE_URL ? `${PUBLIC_BASE_URL}/${key}` : "";
@@ -72,7 +72,7 @@ export async function documentRoutes(fastify: FastifyInstance) {
         }
     });
 
-    // Confirm upload (optional): validate object exists & update size/contentType
+    // Confirm upload (optional): HEAD object -> update size/contentType
     fastify.post("/documents/:id/confirm", async (req, reply) => {
         try {
             const { id } = req.params as any;
@@ -108,7 +108,7 @@ export async function documentRoutes(fastify: FastifyInstance) {
         return reply.send({ ok: true, count, page: pageNum, pageSize: pageSz, items: rows });
     });
 
-    // Get presigned download for a key (private bucket). If bucket is PUBLIC, return doc.url.
+    // Download (presigned GET). If bucket is PUBLIC, you can return doc.url directly.
     fastify.get("/documents/:id/download", async (req, reply) => {
         const { id } = req.params as any;
         const doc = await Document.findByPk(id);
