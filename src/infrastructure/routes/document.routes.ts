@@ -49,7 +49,7 @@ export const documentRoutes = fp(async (fastify: FastifyInstance, _opts: Fastify
             ContentLength: fileBuffer.length,
         }));
 
-        const url = `/api/files/download?key=${encodeURIComponent(key)}`;
+        const url = `/files/download?key=${encodeURIComponent(key)}`;
 
         const doc = await DocumentModel.create({
             userId,
