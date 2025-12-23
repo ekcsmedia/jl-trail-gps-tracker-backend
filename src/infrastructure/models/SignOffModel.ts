@@ -5,61 +5,102 @@ import {
     DataType,
     HasMany,
     Default,
+    AllowNull,
 } from 'sequelize-typescript';
 import { TripDetailModel } from './TripDetailModel';
 import { ParticipantModel } from './ParticipantModel';
 import { PhotoModel } from './PhotoModel';
 
-@Table({ tableName: 'sign_offs' })
+@Table({
+    tableName: 'sign_offs',
+    timestamps: true, // createdAt / updatedAt
+})
 export class SignOffModel extends Model {
-    @Column({ type: DataType.STRING, allowNull: true })
+    /* ========================
+     * BASIC DETAILS
+     * ======================== */
+
+    @AllowNull(true)
+    @Column(DataType.STRING)
     declare customerName: string | null;
 
-    @Column({ type: DataType.FLOAT, allowNull: true })
+    @AllowNull(true)
+    @Column(DataType.FLOAT)
     declare customerExpectedFE: number | null;
 
-    @Column({ type: DataType.FLOAT, allowNull: true })
+    @AllowNull(true)
+    @Column(DataType.FLOAT)
     declare beforeTrialsFE: number | null;
 
-    @Column({ type: DataType.FLOAT, allowNull: true })
+    @AllowNull(true)
+    @Column(DataType.FLOAT)
     declare afterTrialsFE: number | null;
 
-    @Column({ type: DataType.JSON, allowNull: true })
-    declare customerVehicleDetails: object | null;
+    @AllowNull(true)
+    @Column(DataType.JSON)
+    declare customerVehicleDetails: Record<string, any> | null;
 
-    @Column({ type: DataType.TEXT, allowNull: true })
+    @AllowNull(true)
+    @Column(DataType.TEXT)
     declare issuesFoundDuringTrial: string | null;
 
-    @Column({ type: DataType.TEXT, allowNull: true })
+    @AllowNull(true)
+    @Column(DataType.TEXT)
     declare trialRemarks: string | null;
 
-    @Column({ type: DataType.TEXT, allowNull: true })
+    @AllowNull(true)
+    @Column(DataType.TEXT)
     declare customerRemarks: string | null;
 
-    @Column({ type: DataType.ENUM('DRIVER', 'ADMIN'), allowNull: false })
+    /* ========================
+     * ROLE & OWNERSHIP
+     * ======================== */
+
+    @AllowNull(false)
+    @Column(DataType.ENUM('DRIVER', 'ADMIN'))
     declare createdByRole: 'DRIVER' | 'ADMIN';
 
-    // ✅ NEW FIELDS
-    @Column({ type: DataType.TEXT, allowNull: true })
-    declare driverId: string | null; // link to driver (FK if you have Drivers table)
+    @AllowNull(true)
+    @Column(DataType.TEXT)
+    declare driverId: string | null;
 
-    @Column({ type: DataType.TEXT, allowNull: true })
-    declare createdBy: string | null; // nullable string
+    @AllowNull(true)
+    @Column(DataType.TEXT)
+    declare createdBy: string | null;
 
+    /* ========================
+     * TRIAL COMPLETION (KEY)
+     * ======================== */
+
+    // ✅ Checkbox-driven confirmation
+    @Default(false)
+    @AllowNull(false)
+    @Column(DataType.BOOLEAN)
+    declare trialCompleted: boolean;
+
+    /* ========================
+     * STATUS & SUBMISSION
+     * ======================== */
 
     @Default('DRAFT')
-    @Column({ type: DataType.ENUM('DRAFT', 'SUBMITTED'), allowNull: false })
+    @AllowNull(false)
+    @Column(DataType.ENUM('DRAFT', 'SUBMITTED'))
     declare status: 'DRAFT' | 'SUBMITTED';
 
-    @Column({ type: DataType.DATE, allowNull: true })
+    @AllowNull(true)
+    @Column(DataType.DATE)
     declare submittedAt: Date | null;
 
-    @HasMany(() => TripDetailModel)
+    /* ========================
+     * ASSOCIATIONS
+     * ======================== */
+
+    @HasMany(() => TripDetailModel, { onDelete: 'CASCADE' })
     declare tripDetails?: TripDetailModel[];
 
-    @HasMany(() => ParticipantModel)
+    @HasMany(() => ParticipantModel, { onDelete: 'CASCADE' })
     declare participants?: ParticipantModel[];
 
-    @HasMany(() => PhotoModel)
+    @HasMany(() => PhotoModel, { onDelete: 'CASCADE' })
     declare photos?: PhotoModel[];
 }

@@ -22,6 +22,7 @@ export class SignOffRepository implements ISignOffRepository {
                 trialRemarks: payload.trialRemarks ?? null,
                 customerRemarks: payload.customerRemarks ?? null,
                 createdByRole: payload.createdByRole,
+                trialCompleted: payload.trialCompleted ?? false,
             }, { transaction: t });
 
             if (payload.tripDetails?.length) {
@@ -83,6 +84,7 @@ export class SignOffRepository implements ISignOffRepository {
                 issuesFoundDuringTrial: payload.issuesFoundDuringTrial ?? signOff.issuesFoundDuringTrial,
                 trialRemarks: payload.trialRemarks ?? signOff.trialRemarks,
                 customerRemarks: payload.customerRemarks ?? signOff.customerRemarks,
+                trialCompleted: payload.trialCompleted ?? signOff.trialCompleted,
             }, { transaction: t });
 
             // naive replace strategy for child rows when provided
@@ -127,6 +129,7 @@ export class SignOffRepository implements ISignOffRepository {
 
         return await SignOffModel.create({
             ...data,
+            trialCompleted: data.trialCompleted ?? false,
             status: 'DRAFT',
             isSubmitted: false,
         });
@@ -134,7 +137,6 @@ export class SignOffRepository implements ISignOffRepository {
 
 
     async submit(id: number, role: 'DRIVER' | 'ADMIN'): Promise<SignOffModel> {
-        // update only status + submittedAt (and optionally role)
         await SignOffModel.update(
             {
                 status: 'SUBMITTED',
@@ -145,14 +147,12 @@ export class SignOffRepository implements ISignOffRepository {
         );
 
         const updated = await SignOffModel.findByPk(id, {
-            include: ['tripDetails', 'participants', 'photos'],
+            include: [TripDetailModel, ParticipantModel, PhotoModel],
         });
 
-        if (!updated) {
-            throw new Error(`SignOff with id ${id} not found`);
-        }
-
+        if (!updated) throw new Error(`SignOff ${id} not found`);
         return updated;
     }
+
 
 }

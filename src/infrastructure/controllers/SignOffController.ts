@@ -66,11 +66,30 @@ export class SignOffController {
         }
     }
 
-
+// src/infrastructure/controllers/SignOffController.ts
     static async submit(req: FastifyRequest, reply: FastifyReply) {
-        const { id } = req.params as any;
-        const { role } = req.body as any;
+        const { id } = req.params as { id: string };
+        const body = req.body as any;
+
+        const role: 'DRIVER' | 'ADMIN' = body.role;
+
+        // 🔴 fetch existing record
+        const existing = await repo.getById(+id);
+        if (!existing) {
+            return reply.code(404).send({ message: 'SignOff not found' });
+        }
+
+        // 🔐 HARD VALIDATION
+        if (role === 'DRIVER') {
+            if (!existing.trialCompleted) {
+                return reply.code(400).send({
+                    message: 'Trial not marked as completed',
+                });
+            }
+        }
+
         const result = await repo.submit(+id, role);
         reply.send(result);
     }
+
 }

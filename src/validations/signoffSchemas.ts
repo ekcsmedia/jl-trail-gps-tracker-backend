@@ -31,6 +31,7 @@ export const signOffCreateSchema = z.object({
     trialRemarks: z.any().nullable().optional(),
     customerRemarks: z.any().nullable().optional(),
     createdByRole: z.any().nullable().optional(),
+    trialCompleted: z.boolean().optional(),
     participants: z.array(participantSchema).nullable().optional(),
     tripDetails: z.array(tripDetailSchema).nullable().optional(),
     photos: z.array(
